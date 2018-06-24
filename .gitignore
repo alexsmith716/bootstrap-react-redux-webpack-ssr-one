@@ -51,9 +51,10 @@ yarn.lock
 
 /src/**/*.css
 companies.txt
-server/config/config.js
-server/mail/config.js
+config/config.js
 server/config.js
+config.js
+server/mail/config.js
 /client/build
 dist/
 static/dist/

@@ -1,5 +1,5 @@
 import cookie from 'cookie';
-import config from '../config';
+import config from '../config/config';
 import actions from './actions';
 
 import { mapUrl, parseToken } from './common/utils';

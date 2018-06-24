@@ -3,9 +3,9 @@ const helpers = require('./helpers');
 const path = require('path');
 
 const ReactLoadablePlugin = require('react-loadable/webpack').ReactLoadablePlugin;
-
 const base_configuration = require('./webpack.config');
-const application_configuration = require('../configuration');
+const dev_config = require('../config/config');
+
 const settings = require('./universal-webpack-settings');
 const { clientConfiguration } = require('universal-webpack');
 const configuration = clientConfiguration(base_configuration, settings);
@@ -152,13 +152,13 @@ configuration.plugins.push(
 );
 
 // network path for static files: fetch all statics from webpack development server
-configuration.output.publicPath = `http://${application_configuration.webpack.devserver.host}:${application_configuration.webpack.devserver.port}${configuration.output.publicPath}`;
+configuration.output.publicPath = `http://${dev_config.devServerHost}:${dev_config.devServerPort}${configuration.output.publicPath}`;
 
 console.log('>>>>>> webpack.config.client.development.babel.js > configuration.output.publicPath: ', configuration.output.publicPath);
 
 // `webpack-serve` Config settings.
 configuration.serve = {
-  port : application_configuration.webpack.devserver.port,
+  port : dev_config.devServerPort,
   dev  : {
     // https://github.com/webpack-contrib/webpack-serve/issues/95
     publicPath : configuration.output.publicPath,

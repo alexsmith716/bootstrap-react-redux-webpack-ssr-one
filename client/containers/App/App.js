@@ -9,7 +9,7 @@ import { isLoaded as isInfoLoaded, load as loadInfo } from '../../redux/modules/
 import { isAuthLoaded, loadAuth, logout } from '../../redux/modules/auth';
 
 import Notifs from '../../components/Notifs/Notifs';
-import config from '../../../server/config';
+import config from '../../../config/config';
 
 // https://reactjs.org/docs/dom-elements.html <<<<<<<<< DOM attributes supported by React
 // https://github.com/facebook/react/issues/10772#issuecomment-333242375
