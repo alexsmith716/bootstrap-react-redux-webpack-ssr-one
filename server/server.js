@@ -1,6 +1,6 @@
-import fs from 'fs';
 import express from 'express';
 import helmet from 'helmet';
+import serverConfig from '../config/config';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -11,15 +11,12 @@ import morgan from 'morgan';
 import path from 'path';
 import http from 'http';
 import favicon from 'serve-favicon';
-// import locale from 'locale';
-import dotenv from 'dotenv';
 import apiClient from './helpers/apiClient';
-import serverConfig from './config';
 import headers from './utils/headers';
 import delay from 'express-delay';
-// import mongooseConnect from './mongo/mongooseConnect';
 import apiRouter from '../api/apiRouter';
 import mongoose from 'mongoose';
+import httpProxy from 'http-proxy';
 
 // #########################################################################
 
@@ -70,7 +67,6 @@ const mongooseOptions = {
 
 // #########################################################################
 
-//app.use(/\/api/, mongooseConnect);
 mongoose.Promise = global.Promise;
 mongoose.connect(dbURL, mongooseOptions, err => {
   if (err) {
@@ -79,16 +75,6 @@ mongoose.connect(dbURL, mongooseOptions, err => {
     console.error('####### > Mongodb is installed and running!');
   }
 });
-
-// #########################################################################
-
-// import testingNodeLoadProcess3 from './testingNodeLoad/testingNodeLoadProcess3';
-// import testingNodeLoadProcess4 from './testingNodeLoad/testingNodeLoadProcess4';
-// import testingNodeLoadProcess2 from './testingNodeLoad/testingNodeLoadProcess2';
-
-// #########################################################################
-
-dotenv.config();
 
 // #########################################################################
 
@@ -116,8 +102,7 @@ export default function (parameters) {
     return false;
   };
 
-  // const port = normalizePort(process.env.PORT || serverConfig.port);
-  const port = 3000;
+  const port = normalizePort(serverConfig.port);
   app.set('port', port);
 
   // app.use((req, res, next) => {
@@ -147,9 +132,6 @@ export default function (parameters) {
   }
 
   // #########################################################################
-
-  //app.use(express.json());
-  //app.use(express.urlencoded());
 
   app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
   app.use(bodyParser.json({ limit: '20mb' }));
@@ -183,8 +165,7 @@ export default function (parameters) {
 
   // app.use(/\/api/, session({
   app.use(session({
-    // secret: process.env.SESSION_SECRET,
-    secret: 'keyboardcat123abz',
+    secret: serverConfig.sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
@@ -291,8 +272,8 @@ export default function (parameters) {
 
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > DID IT !! res.status(200).send <<<<<<<<<<<<<<<<<<');
 
-      //res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
-      res.status(200).send(`<!doctype html>${ReactDOM.renderToString(html)}`);
+      res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
+      // res.status(200).send(`<!doctype html>${ReactDOM.renderToString(html)}`);
 
     } catch (error) {
 

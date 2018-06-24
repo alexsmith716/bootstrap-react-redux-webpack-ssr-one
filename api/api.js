@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import apiConfig from '../configuration/config';
 
 process.on('unhandledRejection', (error, promise) => {
   console.error('>>>>>> API > API > Unhandled Rejection at:', promise, 'reason:', error);
@@ -35,15 +36,15 @@ app.use(express.errorHandler({
   }
 }));
 
-if (process.env.APIPORT) {
+if (apiConfig.apiPort) {
 
-  app.listen(process.env.APIPORT, err => {
+  app.listen(apiConfig.apiPort, err => {
 
     if (err) {
       console.error('>>>>>> API > API > Express server connection Error', err);
     }
 
-    console.error('>>>>>> API > API > Express server running on PORT: ', process.env.APIPORT);
+    console.error('>>>>>> API > API > Express server running on PORT: ', apiConfig.apiPort);
 
   });
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import config from '../config';
+import config from '../../config/config';
 
 export default function apiClient(req) {
   const instance = axios.create({
@@ -15,8 +15,6 @@ export default function apiClient(req) {
   instance.setJwtToken = newToken => {
     token = newToken;
   };
-
-
 
   instance.interceptors.request.use(
     conf => {
