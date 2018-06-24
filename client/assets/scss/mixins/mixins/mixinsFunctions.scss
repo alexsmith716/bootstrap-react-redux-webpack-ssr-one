@@ -1,0 +1,34 @@
+
+// --------------------------------------------------------------------------------
+// CALCULATE AND RETURN PIXEL TO REM
+// --------------------------------------------------------------------------------
+
+@function test-number-px($testSize) {
+
+  @if (type-of($testSize) == number) {
+
+    @if (unit($testSize) != "px") {
+
+      @error "`#{$testSize}` needs to be a pixel value.";
+
+    }
+
+  } @else {
+
+    @error "`#{$testSize}` needs to be a number.";
+
+  }
+
+  @return $testSize;
+
+}
+
+@function calculate-rem($size) {
+
+  $testedSize: test-number-px($size);
+
+  $remSize: $testedSize / $base-font-pixel-size;
+
+  @return #{$remSize}rem;
+
+}

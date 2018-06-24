@@ -1,0 +1,130 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  // padding-top: 3.5rem;
+  padding-top: 54px;
+  // @include tester-font2;
+  // font-size: 1rem;
+}
+
+#mainNav .navbar-collapse .navbar-nav .nav-item .nav-link {
+  cursor: pointer;
+}
+
+h2 {
+  @include tester-font2;
+}
+
+hr {
+  // border-color: $secondary;
+}
+
+hr.light {
+  // border-color: $light;
+}
+
+// --------------------------------------------------------------------------------
+// FONTS
+// --------------------------------------------------------------------------------
+
+
+.allerLightFont {
+  @include aller-light-font;
+}
+
+.bootstrapDefaultFont {
+  @include bootstrap-default-font;
+}
+
+.firamonoRegularFont {
+  @include firamono-regular-font;
+}
+
+.norwesterFont {
+  @include norwester-font;
+}
+
+.oldEnglishFont {
+  @include old-english-font;
+}
+
+.openSansLightFont {
+  @include opensans-light-font;
+}
+
+.scadaRegularFont {
+  @include scada-regular-font;
+}
+
+.sourcesansproRegularWebfontFont {
+  @include sourcesanspro-regular-webfont-font;
+}
+
+// --------------------------------------------------------------------------------
+// COLORS
+// --------------------------------------------------------------------------------
+
+.colorPurpleGlobal {
+  color: #9B30FF;
+}
+
+.colorOliveGlobal {
+  color: #808000;
+}
+
+.colorCrimsonGlobal {
+  color: #DC143C;
+}
+
+.colorGoldGlobal {
+  color: #FFD700;
+}
+
+.colorLightblueGlobal {
+  color: #BFEFFF;
+}
+
+.colorLavenderGlobal {
+  color: #E6E6FA;
+}
+
+.colorTurquoiseGlobal {
+  color: #00F5FF;
+}
+
+.colorYellowGlobal {
+  color: #FFFF00;
+}
+
+.colorSpringgreenGlobal {
+  color: #00EE76;
+}
+
+.colorAzureGlobal {
+  color: #F0FFFF;
+}
+
+// cyan 2:            00EEEE
+// rosybrown 1:       FFC1C1
+// orange 1:          FFA500
+// yellow:            FFFF00
+// springgreen 1:     00EE76
+// slate gray:        C6E2FF
+// turquoise:         00F5FF
+// darkturquoise:     00CED1
+// darkolivegreen:    CAFF70
+// olive:             808000
+// salmon:            FF8C69
+// burlywood:         FFD39B
+// dodgerblue:        1E90FF
+// palevioletred:     DB7093
+// purple:            9B30FF
+// crimson:           DC143C
+// lightblue:         BFEFFF
+// lavender:          E6E6FA
+// azure:             F0FFFF
+// ivory:             FFFFF0
+// snow:              FFFAFA

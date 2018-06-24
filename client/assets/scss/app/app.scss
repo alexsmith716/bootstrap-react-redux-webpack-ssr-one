@@ -1,0 +1,310 @@
+
+// global styling --------------------------------------
+
+// * {
+//   margin: 0px; 
+//   padding: 0px; 
+//   box-sizing: border-box;
+// }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  // @include tester-font2;
+  // padding-top: calculate-rem(56px);
+}
+
+#main-nav .navbar-collapse .navbar-nav .nav-item .nav-link {
+  cursor: pointer;
+}
+
+h2 {
+  @include tester-font2;
+}
+
+hr {
+  border-color: $secondary;
+}
+
+hr.light {
+  border-color: $light;
+}
+
+.app-container {
+  margin-top: calculate-rem(56px);
+  // margin-bottom: calculate-rem(10px);
+  position: relative;
+}
+
+.button-facebook,
+.button-google {
+  line-height: 1.2;
+  width: calculate-rem(130px);
+  height: calculate-rem(40px);
+  border-radius: calculate-rem(3px);
+  border: calculate-rem(1px) solid #B8B8B8;
+  background-color: #ffffff;
+
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
+}
+
+.button-facebook {
+  color: #3b5998;
+}
+
+.button-facebook i {
+  @include font-size(20px);
+  margin-right: calculate-rem(10px);
+  padding-bottom: calculate-rem(1px);
+}
+
+.button-google {
+  color: #555555;
+}
+
+.button-google img {
+  width: calculate-rem(19px);
+  margin-right: calculate-rem(10px);
+  padding-bottom: calculate-rem(1px);
+}
+
+.button-facebook:hover,
+.button-google:hover {
+  border-color: #EEEEE0;
+}
+
+.btn-width-fifty-percent {
+  width: 50%;
+}
+
+// --------------------------------------------------------------------------------
+// GLOBAL FONTS
+// --------------------------------------------------------------------------------
+
+
+.font-montserratlight {
+  @include montserratlight-font;
+}
+
+.font-bootstrap-default {
+  @include bootstrap-default-font;
+}
+
+.font-opensans-bold-webfont {
+  @include opensans-bold-webfont-font;
+}
+
+.font-opensans-italic-webfont {
+  @include opensans-italic-webfont-font;
+}
+
+.font-norwester {
+  @include norwester-font;
+}
+
+.font-old-english {
+  @include old-english-font;
+}
+
+.font-philosopher-bold-webfont {
+  @include philosopher-bold-webfont-font;
+}
+
+.font-lobster-v20-latin-regular {
+  @include lobster-v20-latin-regular-font;
+}
+
+.font-sourcesanspro-regular-webfont {
+  @include sourcesanspro-regular-webfont-font;
+}
+
+.font-roboto-mono-v4-latin-regular {
+  @include roboto-mono-v4-latin-regular-font;
+}
+
+// --------------------------------------------------------------------------------
+// GLOBAL COLORS
+// --------------------------------------------------------------------------------
+
+.color-purple {
+  color: #9B30FF;
+}
+
+.color-olive {
+  color: #808000;
+}
+
+.color-crimson {
+  color: #DC143C;
+}
+
+.color-gold {
+  color: #FFD700;
+}
+
+.color-lightblue {
+  color: #BFEFFF;
+}
+
+.color-lavender {
+  color: #E6E6FA;
+}
+
+.color-turquoise {
+  color: #00F5FF;
+}
+
+.color-yellow {
+  color: #FFFF00;
+}
+
+.color-springgreen {
+  color: #00EE76;
+}
+
+.color-azure {
+  color: #F0FFFF;
+}
+
+.color-darkgray {
+  color: #A9A9A9;
+}
+
+.color-salmon {
+  color: #FF8C69;
+}
+
+.color-orangered {
+  color: #FF4500;
+}
+
+
+
+
+.montserratLightFont {
+  @include montserratlight-font;
+}
+
+.bootstrapDefaultFont {
+  @include bootstrap-default-font;
+}
+
+.openSansBoldwebfontFont {
+  @include opensans-bold-webfont-font;
+}
+
+.openSansItalicwebfontFont {
+  @include opensans-italic-webfont-font;
+}
+
+.norwesterFont {
+  @include norwester-font;
+}
+
+.oldEnglishFont {
+  @include old-english-font;
+}
+
+.philosopherboldwebfontFont {
+  @include philosopher-bold-webfont-font;
+}
+
+.lobsterv20latinregularFont {
+  @include lobster-v20-latin-regular-font;
+}
+
+.sourcesansproregularwebfontFont {
+  @include sourcesanspro-regular-webfont-font;
+}
+
+.robotoMonoV4LatinRegularFont {
+  @include roboto-mono-v4-latin-regular-font;
+}
+
+// --------------------------------------------------------------------------------
+// GLOBAL COLORS
+// --------------------------------------------------------------------------------
+
+.colorPurpleGlobal {
+  color: #9B30FF;
+}
+
+.colorOliveGlobal {
+  color: #808000;
+}
+
+.colorCrimsonGlobal {
+  color: #DC143C;
+}
+
+.colorGoldGlobal {
+  color: #FFD700;
+}
+
+.colorLightblueGlobal {
+  color: #BFEFFF;
+}
+
+.colorLavenderGlobal {
+  color: #E6E6FA;
+}
+
+.colorTurquoiseGlobal {
+  color: #00F5FF;
+}
+
+.colorYellowGlobal {
+  color: #FFFF00;
+}
+
+.colorSpringgreenGlobal {
+  color: #00EE76;
+}
+
+.colorAzureGlobal {
+  color: #F0FFFF;
+}
+
+.colorDarkgrayGlobal {
+  color: #A9A9A9;
+}
+
+.colorSalmonGlobal {
+  color: #FF8C69;
+}
+
+.colorOrangeRedGlobal {
+  color: #FF4500;
+}
+
+// oldlace:           FDF5E6
+// orangered:         FF4500
+// darkgray:          A9A9A9
+// cyan 2:            00EEEE
+// rosybrown 1:       FFC1C1
+// orange 1:          FFA500
+// yellow:            FFFF00
+// springgreen 1:     00EE76
+// slate gray:        C6E2FF
+// turquoise:         00F5FF
+// darkturquoise:     00CED1
+// darkolivegreen:    CAFF70
+// olive:             808000
+// salmon:            FF8C69
+// burlywood:         FFD39B
+// dodgerblue:        1E90FF
+// palevioletred:     DB7093
+// purple:            9B30FF
+// crimson:           DC143C
+// lightblue:         BFEFFF
+// lavender:          E6E6FA
+// azure:             F0FFFF
+// ivory:             FFFFF0
+// snow:              FFFAFA

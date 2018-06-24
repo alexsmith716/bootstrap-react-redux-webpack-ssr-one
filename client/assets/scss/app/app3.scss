@@ -1,0 +1,34 @@
+
+$fa-font-path: "~font-awesome/fonts";
+
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// THE BELOW CONFIG IS TO CONTROL FONT SUPPORT (help limit font bundle size)
+// -------------------------------------------------------------------------------
+
+// HANDLING FONT-AWESOME FONTS (2 CHOICES):
+
+// CHOICE 1:
+// GO WITH ALL THE DEFAULT FONTS:
+// UNCOMMENT LINE BELOW AND COMMENT OUT THE 4 CHOICE 2 IMPORTS
+// @import "~font-awesome/scss/font-awesome.scss";
+
+// CHOICE 2:
+// MODIFY THE DEFAULT FONTS (refer to 'pathModified.scss'):
+
+@import "~font-awesome/scss/_variables.scss";
+@import "~font-awesome/scss/_mixins.scss";
+
+@import "../fontAwesome/customizations/pathModified.scss";
+@import "../fontAwesome/customizations/font-awesome-modified.scss";
+
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+@import "../fonts/fonts.scss";
+
+@import "../mixins/mixins.scss";
+
+@import "./app.scss";

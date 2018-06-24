@@ -1,0 +1,43 @@
+
+.app {
+  .brand {
+    @include bootstrap-default-font;
+    color: #00BFFF;
+    // cursor: pointer;
+  }
+  // nav :global(.fa) {
+  //   font-size: 1em;
+  //   line-height: 20px;
+  // }
+}
+
+.appContent {
+  padding-top: calculate-rem(56px);
+  min-height: calc(100vh - 145px); // exclude the height of footer
+  position: relative;
+}
+
+.faBars {
+  // transform: scale(1.5, 1.5);
+  // @include font-size(28px);
+}
+
+.footer {
+  background: #388E8E;
+  margin-bottom: 0;
+  padding: 10px 0;
+  height: 145px;
+}
+
+// sgi teal:            388E8E
+// slateblue 4:         473C8B
+// lightsteelblue 1:    00BFFF
+// deepskyblue 1:       CAE1FF
+// gray 63:             A1A1A1
+// slategray 1;         C6E2FF
+// lightsteelblue 1:    CAE1FF
+// ghostwhite:          F8F8FF
+// aliceblue:           F0F8FF
+// gray 40:             666666
+
+// min-height: 100vh;

@@ -1,0 +1,88 @@
+
+///* --------------------------------------------------------------------------------
+// CALCULATE AND RETURN PIXEL TO REM
+// -------------------------------------------------------------------------------- */
+
+// Below IS THE Bootstrap v4 "font-size-base":
+// $font-size-base: 1rem; // <<<<<<<< 16px;
+
+@mixin font-size($size) {
+  // font-size: $size; // fallback
+  font-size: calculate-rem($size);
+}
+
+// --------------------------------------------------------------------------------
+// CUSTOM FONTS
+// --------------------------------------------------------------------------------
+
+@mixin bootstrap-default-font() {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+@mixin montserratlight-font() {
+  font-family: 'MontserratLight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin opensans-bold-webfont-font() {
+  font-family: 'OpenSans-Bold-webfont', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin opensans-italic-webfont-font() {
+  font-family: 'OpenSans-Italic-webfont', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin norwester-font() {
+  font-family: norwester, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin old-english-font() {
+  font-family: 'Old English', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin philosopher-bold-webfont-font() {
+  font-family: 'philosopher-bold-webfont', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin lobster-v20-latin-regular-font() {
+  font-family: 'lobster-v20-latin-regular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin sourcesanspro-regular-webfont-font() {
+  font-family: 'sourcesanspro-regular-webfont', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin roboto-mono-v4-latin-regular-font() {
+  font-family: 'roboto-mono-v4-latin-regular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+// --------------------------------------------------------------------------------
+// SYSTEM FONTS (mac 10.13)
+// --------------------------------------------------------------------------------
+
+@mixin serif-font() {
+  font-family: 'Lora', 'Times New Roman', serif;
+}
+
+@mixin sans-serif-font() {
+  font-family: 'Comic Sans MS', 'Microsoft Sans Serif', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin body-font() {
+  font-family: 'Playbill', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin tester-font() {
+  font-family: 'Phosphate', 'Desdemona', 'Noteworthy', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin tester-font2() {
+  font-family: 'Desdemona', 'Noteworthy', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin tester-font3() {
+  font-family: 'Stencil', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@mixin tester-font4() {
+  font-family: 'American Typewriter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}

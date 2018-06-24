@@ -1,0 +1,75 @@
+
+$fa-font-path: "~font-awesome/fonts";
+
+// -------------------------------------------------------------------------------
+
+@import "../bootstrap/customizations/preBootstrapCustomizations.scss";
+
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// THE BELOW CONFIG IS TOTALLY OPTIONAL
+// IT'S JUST ANOTHER WAY TO CONFIG BOOTSTRAP IF NOT USING BOOTSTRAP LOADER
+// I ACTUALLY GOT THE 'post' 'pre' CONFIG IDEA FROM BOOTSTRAP LOADER
+// Loaded after bootstrap variables is loaded and before bootstrap is loaded
+// Just an option to configure on the value of the '!default' variable
+// -------------------------------------------------------------------------------
+
+// HANDLING BOOTSTRAP STYLES (2 CHOICES):
+
+// CHOICE 1:
+// GO WITH ALL THE DEFAULT STYLE VARIABLES (as pred-modified by 'preBootstrapCustomizations.scss' above):
+// UNCOMMENT LINE BELOW AND COMMENT OUT THE 5 CHOICE 2 IMPORTS
+@import "~bootstrap/scss/bootstrap.scss";
+
+// -------------------------------------------------------------------------------
+
+// CHOICE 2:
+// MODIFY THE DEFAULT STYLE VARIABLES (as pre-modified by 'preBootstrapCustomizations.scss' above):
+
+// @import "~bootstrap/scss/_functions.scss";
+// @import "~bootstrap/scss/_variables.scss";
+// @import "~bootstrap/scss/_mixins.scss";
+
+@import "../bootstrap/customizations/bootstrapCustomizations.scss";
+@import "../bootstrap/customizations/customizedComponentStyles.scss";
+
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// THE BELOW CONFIG IS TO CONTROL FONT SUPPORT (help limit font bundle size)
+// -------------------------------------------------------------------------------
+
+// HANDLING FONT-AWESOME FONTS (2 CHOICES):
+
+// CHOICE 1:
+// GO WITH ALL THE DEFAULT FONTS:
+// UNCOMMENT LINE BELOW AND COMMENT OUT THE 4 CHOICE 2 IMPORTS
+// @import "~font-awesome/scss/font-awesome.scss";
+
+// CHOICE 2:
+// MODIFY THE DEFAULT FONTS (refer to 'pathModified.scss'):
+
+@import "~font-awesome/scss/_variables.scss";
+@import "~font-awesome/scss/_mixins.scss";
+
+@import "../fontAwesome/customizations/pathModified.scss";
+@import "../fontAwesome/customizations/font-awesome-modified.scss";
+
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+@import "../fonts/fonts.scss";
+
+// -------------------------------------------------------------------------------
+
+@import "../mixins/mixins.scss";
+
+// -------------------------------------------------------------------------------
+
+@import "../app/app.scss";

@@ -1,0 +1,35 @@
+
+.colorMarginStyleLocal {
+  margin-top: calculate-rem(30px);
+  color: #5c6ac4;
+  border: calculate-rem(3px) solid #5c6ac4;
+}
+
+.colorGoldLocal {
+  color: #FFD700;
+}
+
+.coloredText1Local {
+  color: #009900;
+}
+
+.coloredText2Local {
+  color: #999000;
+}
+
+.coloredText3Local {
+  @include font-size(20px);
+  color: #00CD00;
+}
+
+.montserratLightFontGlobalToLocal {
+  @include montserratlight-font;
+}
+
+.testColorFont {
+  color: #FFC0CB;
+  @include norwester-font;
+}
+
+
+// pink: FFC0CB

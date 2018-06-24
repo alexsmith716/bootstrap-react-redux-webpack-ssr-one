@@ -1,0 +1,61 @@
+@import '../../theme/variables.scss';
+@import '../../theme/mixins.scss';
+
+.portfolioBox {
+  position: relative;
+  display: block;
+  max-width: 650px;
+  margin: 0 auto;
+  .portfolioBoxCaption {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    opacity: 0;
+    color: $white;
+    background: fade-out($primary, .1);
+    @include transition-all;
+    .portfolioBoxCaptionContent {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      transform: translateY(-50%);
+      text-align: center;
+      .projectCategory,
+      .projectName {
+        padding: 0 15px;
+        @include sans-serif-font;
+      }
+      .projectCategory {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .projectName {
+        font-size: 18px;
+      }
+    }
+  }
+  &:hover {
+    .portfolioBoxCaption {
+      opacity: 1;
+    }
+  }
+  &:focus {
+    outline: none;
+  }
+  @media (min-width: 768px) {
+    .portfolioBoxCaption {
+      .portfolioBoxCaptionContent {
+        .projectCategory {
+          font-size: 16px;
+        }
+        .projectName {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+
+.loginContainer {
+  @include bootstrap-default-font;
+  padding-top: calculate-rem(65px);
+  // padding-bottom: calculate-rem(40px);
+
+  .login {
+    width: calculate-rem(450px);
+  
+    .formTitle {
+      @include font-size(24px);
+      color: #00008B;
+      text-align: center;
+      width: 100%;
+    }
+  
+    .formContainer {
+      padding: calculate-rem(15px) calculate-rem(15px);
+      border: calculate-rem(1px) solid #d8dee2;
+      border-radius: calculate-rem(3px);
+
+      .signInWith {
+        text-align: center;
+        color: #696969;
+        line-height: calculate-rem(50px);;
+      }
+
+    }
+
+    .createAccount {
+      padding: calculate-rem(15px) calculate-rem(15px);
+      border: calculate-rem(1px) solid #d8dee2;
+      border-radius: calculate-rem(3px);
+      a {
+        padding-left: calculate-rem(8px);
+      }
+    }
+  }
+}
+
+// CAE1FF    lightsteelblue 1
+// 9B30FF    purple 1
+// 696969    dimgray (gray 42)
+// ffffff    white
+// FFFF00    yellow 1
+// B8B8B8    gray 72
+// 3b5998    facebook blue
+// 555555    sgi darkgray
+// EEEEE0    ivory 2
