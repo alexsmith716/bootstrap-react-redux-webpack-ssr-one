@@ -1,7 +1,6 @@
 import React from 'react';
 import { fieldPropTypes } from 'redux-form';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
 
 const handleChange = input => date => {
   input.onChange(moment(date).format('LLL'));
@@ -25,7 +24,7 @@ const Datepicker = props => {
           dateFormat="LLL"
           timeFormat="HH:mm"
           className="form-control"
-          selected={input.value ? moment(input.value, 'LLL') : moment()}
+          selected={'fbgbfgbgf'}
           onChange={handleChange(input)}
         />
         {error && touched && <span className="glyphicon glyphicon-remove form-control-feedback" />}
