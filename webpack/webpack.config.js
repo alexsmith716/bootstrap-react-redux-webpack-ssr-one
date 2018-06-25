@@ -23,7 +23,7 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
+        exclude: /node_modules(\/|\\)(?!(@feathersjs))/, // https://docs.feathersjs.com/api/client.html#module-loaders
         use: [
           { 
             loader: 'babel-loader',

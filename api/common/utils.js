@@ -1,4 +1,4 @@
-import moment from 'moment';
+
 import jwt from 'jwt-simple';
 import * as config from './config';
 
@@ -33,8 +33,8 @@ export const createToken = user => {
       email: user.email,
       fullName: user.fullName
     },
-    iat: moment().unix(),
-    exp: moment().add(config.sessionExpiredTime, 'ms').unix()
+    //iat: moment().unix(),
+    //exp: moment().add(config.sessionExpiredTime, 'ms').unix()
   };
   return jwt.encode(payload, config.tokenSecret);
 };

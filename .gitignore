@@ -51,6 +51,7 @@ yarn.lock
 
 /src/**/*.css
 companies.txt
+api/config.js
 config/config.js
 server/config.js
 config.js

@@ -11,12 +11,12 @@ import morgan from 'morgan';
 import path from 'path';
 import http from 'http';
 import favicon from 'serve-favicon';
-import apiClient from './helpers/apiClient';
 import headers from './utils/headers';
 import delay from 'express-delay';
 import apiRouter from '../api/apiRouter';
 import mongoose from 'mongoose';
 import httpProxy from 'http-proxy';
+import Cookies from 'cookies';
 
 // #########################################################################
 
@@ -41,6 +41,9 @@ import { getBundles } from 'react-loadable/webpack';
 import Html from './helpers/Html';
 import routes from '../client/routes';
 import { parse as parseUrl } from 'url';
+
+import { createApp } from './app';
+import apiClient from './helpers/apiClient';
 
 import { getChunks, waitChunks } from './utils/chunks';
 
@@ -86,8 +89,14 @@ process.on('unhandledRejection', (error, promise) => {
 
 export default function (parameters) {
 
+  const targetUrl = `http://${serverConfig.apiHost}:${serverConfig.apiPort}`;
   const app = new express();
   const server = http.createServer(app);
+
+  const proxy = httpProxy.createProxyServer({
+    target: targetUrl,
+    ws: true
+  });
 
   const normalizePort = (val)  => {
     var port = parseInt(val, 10);
@@ -105,19 +114,18 @@ export default function (parameters) {
   const port = normalizePort(serverConfig.port);
   app.set('port', port);
 
-  // app.use((req, res, next) => {
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.ip +++++++++++++: ', req.ip);
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.method +++++++++: ', req.method);
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.url ++++++++++++: ', req.url);
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.headers ++++++++: ', req.headers);
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.session ++++++++: ', req.session);
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.params +++++++++: ', req.params);
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.originalUrl ++++: ', req.originalUrl);
-  //   // console.log('>>>>>>>>>>>>>>>>> SERVER > process.env.SESSION_SECRET ++++: ', process.env.SESSION_SECRET);
-  //   console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN < $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  //   return next();
-  // });
+  app.use((req, res, next) => {
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.ip +++++++++++++: ', req.ip);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.method +++++++++: ', req.method);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.url ++++++++++++: ', req.url);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.headers ++++++++: ', req.headers);
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.session ++++++++: ', req.session);
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.params +++++++++: ', req.params);
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.originalUrl ++++: ', req.originalUrl);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN < $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+    return next();
+  });
 
   app.use(morgan('dev'));
   app.use(helmet());
@@ -133,8 +141,8 @@ export default function (parameters) {
 
   // #########################################################################
 
-  app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
-  app.use(bodyParser.json({ limit: '20mb' }));
+  // app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
+  // app.use(bodyParser.json({ limit: '20mb' }));
   app.use(cookieParser());
   app.use(compression());
   app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
@@ -159,30 +167,35 @@ export default function (parameters) {
   });
 
   // #########################################################################
-  
-  // saveUninitialized: false, // don't create session until something stored
-  // resave: false, // don't save session if unmodified
 
-  // app.use(/\/api/, session({
-  app.use(session({
-    secret: serverConfig.sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({
-      url: serverConfig.mongoURL,
-      touchAfter: 0.5 * 3600
-    })
-  }));
+  app.use('/api', (req, res) => {
+    console.log('>>>>>>>>>>>>>>>> server.js > app.user(/API) <<<<<<<<<<<<<<<<');
+    proxy.web(req, res, { target: targetUrl });
+  });
 
-  app.use((req, res, next) => {
-    // console.log('>>>>>>>>>>>>>>>> SERVER > :');
-    return next();
+  app.use('/ws', (req, res) => {
+    console.log('>>>>>>>>>>>>>>>> server.js > app.user(/WS) <<<<<<<<<<<<<<<<');
+    proxy.web(req, res, { target: `${targetUrl}/ws` });
   });
 
   // #########################################################################
 
-  app.use('/api', apiRouter);
-  
+  // added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
+  proxy.on('error', (error, req, res) => {
+    if (error.code !== 'ECONNRESET') {
+      console.error('proxy error', error);
+    }
+    if (!res.headersSent) {
+      res.writeHead(500, { 'content-type': 'application/json' });
+    }
+
+    const json = {
+      error: 'proxy_error',
+      reason: error.message
+    };
+    res.end(JSON.stringify(json));
+  });
+
   // #########################################################################
 
   // app.use((req, res) => {
@@ -196,6 +209,17 @@ export default function (parameters) {
 
     const chunks = parameters.chunks();
     // const chunks = {...parameters.chunks()};
+
+
+    const providers = {
+      app: createApp(req),
+      client: apiClient(req)
+    };
+
+    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.app !!: ', providers.app);
+    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.client !!: ', providers.client);
+
+    res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
 
     console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! START !! $$$$$$$$$$$$$$$$$$$$$$');
 
@@ -355,8 +379,8 @@ export default function (parameters) {
     // https://nodejs.org/api/net.html#net_class_net_socket
     // https://nodejs.org/api/http.html#http_event_upgrade
     server.on('upgrade', (req, socket, head) => {
-      console.log('>>>>>>>>>>>>>>>> server.js > Express server Upgrade <<<<<<<<<<<<<<<<');
-      // proxy.ws(req, socket, head);
+      console.log('>>>>>>>>>>>>>>>> server.js > server.on(UPGRADE) <<<<<<<<<<<<<<<<');
+      proxy.ws(req, socket, head);
     });
 
   })()

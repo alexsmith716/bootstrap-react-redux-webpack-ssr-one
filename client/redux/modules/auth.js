@@ -1,4 +1,4 @@
-import { SubmissionError } from 'redux-form';
+// import { SubmissionError } from 'redux-form';
 import jsCookie from 'js-cookie';
 
 const LOAD = 'redux-example/auth/LOAD';

@@ -5,7 +5,10 @@ import morgan from 'morgan';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import apiConfig from '../configuration/config';
+import services from './services';
+import channels from './channels';  // Decide what events to send to connected real-time clients
+import serverConfig from '../config/config';
+import config from './config';
 
 process.on('unhandledRejection', (error, promise) => {
   console.error('>>>>>> API > API > Unhandled Rejection at:', promise, 'reason:', error);
@@ -13,9 +16,20 @@ process.on('unhandledRejection', (error, promise) => {
 
 const app = express(feathers());
 
-// app.set('config', config);
+app.set('config', config);
 app.use(morgan('dev'));
 app.use(cookieParser());
+
+// saveUninitialized: false, // don't create session until something stored
+// resave: false, // don't save session if unmodified
+
+app.use(session({
+  secret: serverConfig.sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60000 }
+}));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -36,15 +50,15 @@ app.use(express.errorHandler({
   }
 }));
 
-if (apiConfig.apiPort) {
+if (serverConfig.apiPort) {
 
-  app.listen(apiConfig.apiPort, err => {
+  app.listen(serverConfig.apiPort, err => {
 
     if (err) {
       console.error('>>>>>> API > API > Express server connection Error', err);
     }
 
-    console.error('>>>>>> API > API > Express server running on PORT: ', apiConfig.apiPort);
+    console.error('>>>>>> API > API > Express server running on PORT: ', serverConfig.apiPort);
 
   });
 

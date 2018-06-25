@@ -179,9 +179,6 @@ configuration.plugins.push(
 
   new CleanWebpackPlugin([bundleAnalyzerPath,visualizerPath,assetsPath,serverPath], { root: configuration.context }),
 
-  // new webpack.IgnorePlugin(/\/iconv-loader$/),
-  // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-
   new MiniCssExtractPlugin({
     // filename: '[name].css',
     // filename: '[name].[chunkhash].css',
