@@ -3,15 +3,13 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import BrowserRouter from 'react-router-dom/BrowserRouter';
 import { ConnectedRouter } from 'react-router-redux';
 
 import { renderRoutes } from 'react-router-config';
 import { trigger } from 'redial';
 
 import { ReduxAsyncConnect } from 'redux-connect';
-import { Provider } from 'react-redux';
-// import { ReduxAsyncConnect, Provider } from 'components';
+import { ReduxAsyncConnect, Provider } from '../shared';
 
 import { AppContainer as HotEnabler } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -86,36 +84,65 @@ console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > __DEVTOOLS__ !!!!!: ', __DEVTO
 
   const preloadedState = await getStoredState(persistConfig);
   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > storedData: ', storedData);
-  const online = await (window.__data ? true : isOnline());
+
+  const online = window.__data ? true : await isOnline();
+
+  if (online) {
+    socket.open();
+    await app.authenticate().catch(() => null);
+  }
 
   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > online: ', online);
 
-  const data = !online ? { ...storedData, ...window.__data, online } : { ...window.__data, online };
-  const wd = { ...window.__data };
-  console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > ...window.__data: ', wd);
-  console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > data: ', data);
   const history = createBrowserHistory();
+
   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > history: ', history);
-  const store = createStore(history, client, data, offlinePersistConfig);
+
+  const store = createStore({
+    history,
+    data: {
+      ...preloadedState,
+      ...window.__data,
+      online
+    },
+    helpers: providers,
+    persistConfig
+  });
+
   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > store: ', store);
 
   const hydrate = async _routes => {
-  //const hydrate = _routes => {
+
+    const { components, match, params } = await asyncMatchRoutes(_routes, history.location.pathname);
+
+    const triggerLocals = {
+      ...providers,
+      store,
+      match,
+      params,
+      history,
+      location: history.location
+    };
+
+    await trigger('fetch', components, triggerLocals);
+    await trigger('defer', components, triggerLocals);
+
     ReactDOM.hydrate(
       <HotEnabler>
-        <Provider store={store}>
-          <BrowserRouter>
-            <ReduxAsyncConnect routes={_routes} helpers={{ client }} />
-          </BrowserRouter>
+        <Provider store={store} {...providers}>
+          <ConnectedRouter history={history}>
+            <ReduxAsyncConnect routes={_routes} store={store} helpers={providers}>
+              {renderRoutes(_routes)}
+            </ReduxAsyncConnect>
+          </ConnectedRouter>
         </Provider>
-      </HotEnabler>
-      , dest
+      </HotEnabler>,
+      dest
     );
   };
 
   await Loadable.preloadReady();
   await hydrate(routes);
-  // hydrate(routes);
 
   if (module.hot) {
     console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > MODULE.HOT! <<<<<<<<<<<<<<<<<');

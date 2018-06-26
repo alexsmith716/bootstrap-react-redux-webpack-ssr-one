@@ -4,9 +4,7 @@ import config from '../../config/config';
 export default function apiClient(req) {
 
   const instance = axios.create({
-
     baseURL: __SERVER__ ? `http://${config.apiHost}:${config.apiPort}` : '/api'
-
   });
 
   const cs = __SERVER__ ? '__SERVER__' : '__CLIENT__';
@@ -14,11 +12,14 @@ export default function apiClient(req) {
 
   let token;
 
+  // set jwt token for axios instance
   instance.setJwtToken = newToken => {
     token = newToken;
   };
 
+  // interceptors: intercept REQUESTs or RESPONSEs before they are handled by then or catch
 
+  // Add a REQUEST interceptor
   instance.interceptors.request.use(
 
     conf => {
@@ -66,6 +67,7 @@ export default function apiClient(req) {
     }
   );
 
+  // Add a RESPONSE interceptor
   instance.interceptors.response.use(
     response => {
       console.log('> ApiClient.JS || AXIOS > instance.interceptors.request.use5 > response.data: ', response.data);

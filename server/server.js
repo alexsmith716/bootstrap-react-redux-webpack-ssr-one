@@ -39,7 +39,10 @@ import { ConnectedRouter } from 'react-router-redux';
 import { renderRoutes } from 'react-router-config';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
-// import { trigger } from 'redial';
+import { trigger } from 'redial';
+
+import asyncMatchRoutes from './utils/asyncMatchRoutes';
+import { ReduxAsyncConnect, Provider } from '../shared';
 
 import Html from './helpers/Html';
 import routes from '../client/routes';
@@ -205,7 +208,9 @@ export default function (parameters) {
   //   res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
   // });
 
+
   // #########################################################################
+  // generate HTML page && return contents with 'react-router'
   // #########################################################################
 
   app.use(async (req, res) => {
@@ -297,9 +302,19 @@ export default function (parameters) {
     }
 
     try {
+
       console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$ loadOnServer START $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
 
-      await loadOnServer({store, location, routes, helpers: { client }});
+      const { components, match, params } = await asyncMatchRoutes(routes, req.path);
+
+      await trigger('fetch', components, {
+        ...providers,
+        store,
+        match,
+        params,
+        history,
+        location: history.location // current location
+      });
 
       console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$ loadOnServer END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
 
@@ -311,10 +326,14 @@ export default function (parameters) {
       // Loadable.Capture: component to collect all modules that were rendered
       const component = (
         <Loadable.Capture report={moduleName => modules.push(moduleName)}>
-          <Provider store={store} key="provider">
-            <StaticRouter location={url} context={context}>
-              <ReduxAsyncConnect routes={routes} helpers={{ client }} />
-            </StaticRouter>
+          <Provider store={store} {...providers}>
+            <ConnectedRouter history={history}>
+              <StaticRouter location={req.originalUrl} context={context}>
+                <ReduxAsyncConnect routes={routes} store={store} helpers={providers}>
+                  {renderRoutes(routes)}
+                </ReduxAsyncConnect>
+              </StaticRouter>
+            </ConnectedRouter>
           </Provider>
         </Loadable.Capture>
       );
