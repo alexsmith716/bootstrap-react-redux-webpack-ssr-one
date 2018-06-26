@@ -2,35 +2,89 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import createBrowserHistory from 'history/createBrowserHistory';
-import BrowserRouter from 'react-router-dom/BrowserRouter';
-import localForage from 'localforage';
-import { ReduxAsyncConnect } from 'redux-connect';
-import { AppContainer as HotEnabler } from 'react-hot-loader';
-import { getStoredState } from 'redux-persist';
-import { Provider } from 'react-redux';
 
-import createStore from './redux/create';
-import apiClient from '../server/helpers/apiClient';
+import BrowserRouter from 'react-router-dom/BrowserRouter';
+import { ConnectedRouter } from 'react-router-redux';
+
+import { renderRoutes } from 'react-router-config';
+import { trigger } from 'redial';
+
+import { ReduxAsyncConnect } from 'redux-connect';
+import { Provider } from 'react-redux';
+// import { ReduxAsyncConnect, Provider } from 'components';
+
+import { AppContainer as HotEnabler } from 'react-hot-loader';
+import Loadable from 'react-loadable';
+
 import routes from './routes';
 import isOnline from '../server/utils/isOnline';
 
-import Loadable from 'react-loadable';
+import createBrowserHistory from 'history/createBrowserHistory';
+import createStore from './redux/create';
 
-const offlinePersistConfig = {
-  storage: localForage,
-  whitelist: ['auth', 'info']
+import { socket, createApp } from '../server/app';
+import apiClient from '../server/helpers/apiClient';
+
+import { getStoredState } from 'redux-persist';
+import { CookieStorage } from 'redux-persist-cookie-storage';
+import Cookies from 'cookies-js'; // Client-Side Cookie Manipulation 'cookies-js'
+
+const dest = document.getElementById('content');
+
+// =====================================================================
+// Bootstrap Cookie from preloaded state in window object
+// =====================================================================
+
+const persistConfig = {
+  key: 'root',
+  storage: new CookieStorage(Cookies), // window object cookies passed to 
+  stateReconciler(inboundState, originalState) {
+    // Ignore state from cookies, only use preloadedState from window object
+    return originalState;
+  },
+  whitelist: ['auth', 'info',] // accepting from
 };
 
+// =====================================================================
+// configure client for API communication ( socket / authentication )
+// =====================================================================
+
+const app = createApp();
 const client = apiClient();
-const dest = document.getElementById('content');
+
+const providers = {
+  app,
+  client
+};
+
+// =====================================================================
+// client is configured with socket object now initialize that socket
+// =====================================================================
+
+function initSocket() {
+  socket.on('news', data => {
+    console.log(data);
+    socket.emit('my other event', { my: 'data from client' });
+  });
+  socket.on('msg', data => {
+    console.log(data);
+  });
+
+  return socket;
+}
+
+initSocket();
 
 console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS <<<<<<<<<<<<<<<<<<<<<<<<<<<');
 console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > __DEVTOOLS__ !!!!!: ', __DEVTOOLS__);
 
+// =====================================================================
+// 
+// =====================================================================
+
 (async () => {
 
-  const storedData = await getStoredState(offlinePersistConfig);
+  const preloadedState = await getStoredState(persistConfig);
   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > storedData: ', storedData);
   const online = await (window.__data ? true : isOnline());
 

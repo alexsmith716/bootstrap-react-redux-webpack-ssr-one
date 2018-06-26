@@ -16,7 +16,10 @@ import delay from 'express-delay';
 import apiRouter from '../api/apiRouter';
 import mongoose from 'mongoose';
 import httpProxy from 'http-proxy';
-import Cookies from 'cookies';
+import Cookies from 'cookies'; // dougwilson Express
+
+import { getStoredState } from 'redux-persist';
+import { CookieStorage, NodeCookiesWrapper } from 'redux-persist-cookie-storage';
 
 // #########################################################################
 
@@ -210,41 +213,79 @@ export default function (parameters) {
     const chunks = parameters.chunks();
     // const chunks = {...parameters.chunks()};
 
-
+    // configure server for API communication (rest / axios/ajax)
+    // passing session cookie (req)
     const providers = {
       app: createApp(req),
       client: apiClient(req)
     };
 
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.app !!: ', providers.app);
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.client !!: ', providers.client);
-
-    res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.app !!: ', providers.app);
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.client !!: ', providers.client);
+    // res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
 
     console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! START !! $$$$$$$$$$$$$$$$$$$$$$');
 
-    const url = req.originalUrl || req.url;
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > url: ', url);
+    // manage session history (stack, navigate, confirm navigation, persist state between sessions)
+    // initialEntries: initial URLs in the history stack
+    const history = createMemoryHistory({ initialEntries: [req.originalUrl] });
 
-    const location = parseUrl(url);
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > location: ', location);
+    // redux persist cookie
+    // Read-only mode: using getStoredState()
+    // create cookie jar 'Cookies()'
+    // pass 'cookie jar' to Redux Persist storage 'NodeCookiesWrapper()'
+    const cookieJar = new NodeCookiesWrapper(new Cookies(req, res)); // node module for getting and setting HTTP cookies
 
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > apiClient !!');
-    const client = apiClient(req);
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > apiClient !!');
+    const persistConfig = {
+      key: 'root',
+      storage: new CookieStorage(cookieJar),
+      stateReconciler(inboundState, originalState) {
+        // Ignore state from cookies, only use preloadedState from window object
+        return originalState
+      },
+      whitelist: ['auth', 'info',]
+    };
 
-    const history = createMemoryHistory({ initialEntries: [url] });
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createMemoryHistory !!');
+    // stateReconciler: (inboundState, originalState) => originalState,
 
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > history: '. history);
+    let preloadedState;
+    
+    // read stored cookies: getStoredState()
+    try {
+      preloadedState = await getStoredState(persistConfig);
+    } catch (e) {
+      // getStoredState implementation fails when index storage item is not set.
+      preloadedState = {};
+    }
 
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > createStore !!');
-    const store = createStore(history, client);
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createStore !!');
+    const store = createStore({
+      history,
+      helpers: providers,
+      data: preloadedState
+    });
 
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > store: ', store);
+    // const url = req.originalUrl || req.url;
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > url: ', url);
 
-    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! END !! $$$$$$$$$$$$$$$$$$$$$$$$$');
+    // const location = parseUrl(url);
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > location: ', location);
+
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > apiClient !!');
+    // const client = apiClient(req);
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > apiClient !!');
+
+    // const history = createMemoryHistory({ initialEntries: [url] });
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createMemoryHistory !!');
+
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > history: '. history);
+
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > createStore !!');
+    // const store = createStore(history, client);
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createStore !!');
+
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > store: ', store);
+
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! END !! $$$$$$$$$$$$$$$$$$$$$$$$$');
 
     function hydrate() {
       res.write('<!doctype html>');
