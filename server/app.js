@@ -12,6 +12,8 @@ const host = clientUrl => (__SERVER__ ? `http://${config.apiHost}:${config.apiPo
 
 // ===================================================================================
 
+// localforage: API to access localStorage
+
 // Returning '@feathersjs/feathers' instance
 
 // SERVER
@@ -22,7 +24,7 @@ const host = clientUrl => (__SERVER__ ? `http://${config.apiHost}:${config.apiPo
 // CLIENT:
 //    Connection:       'real-time'
 //    Transport method: 'socket'
-//    Authentication:   'localforage'
+//    Authentication:   'passing localforage'
 
 // ===================================================================================
 

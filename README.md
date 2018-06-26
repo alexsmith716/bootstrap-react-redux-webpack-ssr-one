@@ -27,4 +27,46 @@ App is a continuation of repo 'bootstrap-redux-react-loadable-webpack-dllplugin-
 
   Feathers can be used in the browser, React Native and server side with Node.js. Using the Feathers client you can quickly add authentication, share code between your server and client, and easily make your apps real-time.
 
-  Integrates with any client side framework. 
+  Integrates with any client side framework.
+
+#### ++++++++++++++++++++++++++++++++++++++++
+
+import React from 'react';
+
+import { ConnectedRouter } from 'react-router-redux';
+import { renderRoutes } from 'react-router-config';
+import { trigger } from 'redial';
+
+import routes from 'routes';
+
+import Loadable from 'react-loadable';
+
+import apiClient from 'helpers/apiClient';
+
+import createStore from 'redux/create';
+
+import { getStoredState } from 'redux-persist';
+import { CookieStorage } from 'redux-persist-cookie-storage';
+
+import asyncMatchRoutes from 'utils/asyncMatchRoutes';
+import { ReduxAsyncConnect, Provider } from 'components';
+
+import ReactDOM from 'react-dom/server';
+import { socket, createApp } from 'app';
+
+import createMemoryHistory from 'history/createMemoryHistory';
+
+import createBrowserHistory from 'history/createBrowserHistory';
+
+#### ++++++++++++++++++++++++++++++++++++++++
+
+<Provider store={store} {...providers}>
+  <ConnectedRouter history={history}>
+    <StaticRouter location={req.originalUrl} context={context}>
+      <ReduxAsyncConnect routes={routes} store={store} helpers={providers}>
+        {renderRoutes(routes)}
+      </ReduxAsyncConnect>
+    </StaticRouter>
+  </ConnectedRouter>
+</Provider>
+

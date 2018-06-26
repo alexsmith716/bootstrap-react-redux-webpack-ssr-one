@@ -1,6 +1,4 @@
 
-// Calling webservice ++++++++++++++++++++++++++++++++++++++++++
-
 export default function isOnline(path = '/favicon.ico') {
   // Handle IE and more capable browsers
   console.log('>>>>>>>>>>>>>>>>>>> IsOnline.JS > export default function isOnline  <<<<<<<<<<<<<<<<<<<<<');
@@ -25,17 +23,3 @@ export default function isOnline(path = '/favicon.ico') {
     xhr.send(null);
   });
 }
-
-// https://github.com/socketio/socket.io
-// https://github.com/socketio/socket.io-client
-// https://github.com/socketio/socket.io/blob/master/docs/API.md
-// https://github.com/socketio/socket.io-client/blob/master/docs/API.md
-
-// location: http://example.org:8888/foo/bar#bang
-// hostname === example.org
-// host ======= example.org:8888
-
-// HTTP request method HEAD:
-// The HEAD method asks for a response identical to that of a GET request, 
-// but without the response body. This is useful for retrieving meta-information written in response headers, 
-// without having to transport the entire content.
