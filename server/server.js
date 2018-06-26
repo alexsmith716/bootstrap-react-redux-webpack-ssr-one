@@ -25,10 +25,10 @@ import { CookieStorage, NodeCookiesWrapper } from 'redux-persist-cookie-storage'
 
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import { Provider } from 'react-redux';
-import { renderToString, renderToStaticMarkup } from 'react-dom/server';
-import { StaticRouter, matchPath } from 'react-router';
-import { ReduxAsyncConnect, loadOnServer } from 'redux-connect';
+import { StaticRouter } from 'react-router';
+
+import asyncMatchRoutes from './utils/asyncMatchRoutes';
+import { ReduxAsyncConnect, Provider } from '../shared';
 
 import createMemoryHistory from 'history/createMemoryHistory';
 
@@ -40,9 +40,6 @@ import { renderRoutes } from 'react-router-config';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
 import { trigger } from 'redial';
-
-import asyncMatchRoutes from './utils/asyncMatchRoutes';
-import { ReduxAsyncConnect, Provider } from '../shared';
 
 import Html from './helpers/Html';
 import routes from '../client/routes';
@@ -227,7 +224,7 @@ export default function (parameters) {
 
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.app !!: ', providers.app);
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.client !!: ', providers.client);
-    // res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
+    
 
     console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! START !! $$$$$$$$$$$$$$$$$$$$$$');
 
@@ -254,7 +251,7 @@ export default function (parameters) {
     // stateReconciler: (inboundState, originalState) => originalState,
 
     let preloadedState;
-    
+  
     // read stored cookies: getStoredState()
     try {
       preloadedState = await getStoredState(persistConfig);
@@ -269,27 +266,15 @@ export default function (parameters) {
       data: preloadedState
     });
 
-    // const url = req.originalUrl || req.url;
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > url: ', url);
-
-    // const location = parseUrl(url);
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > location: ', location);
-
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > apiClient !!');
-    // const client = apiClient(req);
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > apiClient !!');
-
-    // const history = createMemoryHistory({ initialEntries: [url] });
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createMemoryHistory !!');
-
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > history: '. history);
-
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > createStore !!');
-    // const store = createStore(history, client);
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createStore !!');
-
-    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > store: ', store);
-
+    console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > store: ', store);
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! END !! $$$$$$$$$$$$$$$$$$$$$$$$$');
 
     function hydrate() {
@@ -343,6 +328,12 @@ export default function (parameters) {
       if (context.url) {
         return res.redirect(302, context.url);
       }
+
+      // const locationState = store.getState().router.location;
+
+      // if (req.originalUrl !== locationState.pathname + locationState.search) {
+      //   return res.redirect(301, locationState.pathname);
+      // }
 
       const bundles = getBundles(getChunks(), modules);
 
