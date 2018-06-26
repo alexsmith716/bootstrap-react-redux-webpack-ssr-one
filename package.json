@@ -16,9 +16,9 @@
     "production": "NODE_ENV=production npm-run-all production:client:rendering-service:build production:client:rendering-service",
     "production:client:rendering-service:build": "webpack --mode production --colors --display-error-details --config ./webpack/webpack.config.server.production.babel.js",
     "production:client:rendering-service": "NODE_ENV=production node ./server/index.entry.js",
-    "production:client:build": "NODE_ENV=production webpack --mode production --colors --display-error-details --config ./webpack/webpack.config.client.production.babel.js",
-    "build-dlls": "webpack --colors --display-error-details --config webpack/vendor.config.js",
-    "build": "concurrently \"yarn production:client:build\" \"yarn build-dlls\""
+    "p:b": "NODE_ENV=production webpack --mode production --colors --display-error-details --config ./webpack/webpack.config.client.production.babel.js",
+    "b:dll": "webpack --colors --display-error-details --config webpack/vendor.config.js",
+    "build": "concurrently \"yarn p:b\" \"yarn b:dll\""
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-beta.47",

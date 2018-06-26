@@ -8,8 +8,9 @@ import { ConnectedRouter } from 'react-router-redux';
 import { renderRoutes } from 'react-router-config';
 import { trigger } from 'redial';
 
-import { ReduxAsyncConnect } from 'redux-connect';
 import { ReduxAsyncConnect, Provider } from '../shared';
+
+import asyncMatchRoutes from '../server/utils/asyncMatchRoutes';
 
 import { AppContainer as HotEnabler } from 'react-hot-loader';
 import Loadable from 'react-loadable';
