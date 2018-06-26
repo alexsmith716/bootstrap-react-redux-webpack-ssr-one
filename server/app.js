@@ -2,6 +2,7 @@ import feathers from '@feathersjs/feathers';
 import rest from '@feathersjs/rest-client';
 import socketio from '@feathersjs/socketio-client';
 import authentication from '@feathersjs/authentication-client';
+
 import io from 'socket.io-client';
 import axios from 'axios';
 import config from '../config/config';
@@ -10,17 +11,20 @@ const storage = __SERVER__ ? null : require('localforage');
 const host = clientUrl => (__SERVER__ ? `http://${config.apiHost}:${config.apiPort}` : clientUrl);
 
 // ===================================================================================
-// ============================== Alot going on here  ================================
+
+// Returning '@feathersjs/feathers' instance
+
+// SERVER
+//    Connection:       'REST'
+//    Transport method: 'axios/ajax'
+//    Authentication:   'null'
+
+// CLIENT:
+//    Connection:       'real-time'
+//    Transport method: 'socket'
+//    Authentication:   'localforage'
+
 // ===================================================================================
-
-
-
-// return instance of '@feathersjs/feathers' configured with transport method && auth client
-
-// const configureApp = transport =>
-//   feathers()
-//     .configure(transport)
-//     .configure(authentication({ storage }));
 
 const configureApp = (transport) => {
   const app = feathers();
@@ -29,14 +33,12 @@ const configureApp = (transport) => {
   return app;
 }
 
-
 // ===================================================================================
 
-// return instance of 'socket.io-client'
+// return instance of 'socket' if client '{ socket, createApp }'
 export const socket = io('', { path: host('/ws'), autoConnect: false });
 
 // ===================================================================================
-
 
 export function createApp(req) {
 
@@ -44,15 +46,15 @@ export function createApp(req) {
     return configureApp( rest(host('/api')).axios(axios) );
   }
 
-
-  // -------- SERVER ---------------------
+  // -------- SERVER ----------------------------------------------
   if (__SERVER__ && req) {
-    const app = configureApp(rest(host('/api')).axios(axios.create({
+
+    const app = configureApp( rest(host('/api')).axios(axios.create({
       headers: {
         Cookie: req.get('cookie'),
         authorization: req.header('authorization') || ''
       }
-    })));
+    })) );
 
     const accessToken = req.header('authorization') || (req.cookies && req.cookies['feathers-jwt']);
     app.set('accessToken', accessToken);
@@ -60,7 +62,6 @@ export function createApp(req) {
     return app;
   }
 
-
-  // -------- CLIENT ---------------------
-  return configureApp(socketio(socket));
+  // -------- CLIENT ----------------------------------------------
+  return configureApp( socketio(socket) );
 }

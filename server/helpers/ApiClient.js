@@ -1,11 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
 
-// ===================================================================================
-// ============================== Alot going on here  ================================
-// ===================================================================================
-
-
 export default function apiClient(req) {
 
   const instance = axios.create({
