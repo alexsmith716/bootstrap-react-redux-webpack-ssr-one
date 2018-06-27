@@ -17,7 +17,7 @@ import delay from 'express-delay';
 import apiRouter from '../api/apiRouter';
 import mongoose from 'mongoose';
 import httpProxy from 'http-proxy';
-import Cookies from 'cookies'; // dougwilson Express
+import Cookies from 'cookies';
 
 import { getStoredState } from 'redux-persist';
 import { CookieStorage, NodeCookiesWrapper } from 'redux-persist-cookie-storage';
@@ -172,6 +172,11 @@ export default function (parameters) {
 
   // #########################################################################
 
+  app.use((req, res, next) => {
+    res.setHeader('X-Forwarded-For', req.ip);
+    return next();
+  });
+
   app.use('/api', (req, res) => {
     console.log('>>>>>>>>>>>>>>>> server.js > app.user(/API) <<<<<<<<<<<<<<<<');
     proxy.web(req, res, { target: targetUrl });
@@ -304,12 +309,14 @@ export default function (parameters) {
 
       console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$ loadOnServer END $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
 
+
       const context = {};
       const modules = [];
 
       // Finding out which dynamic modules were rendered
-      // Find out which modules were actually rendered when a request comes in
+      // Find out which modules were actually rendered when a request comes in:
       // Loadable.Capture: component to collect all modules that were rendered
+
       const component = (
         <Loadable.Capture report={moduleName => modules.push(moduleName)}>
           <Provider store={store} {...providers}>
@@ -324,7 +331,12 @@ export default function (parameters) {
         </Loadable.Capture>
       );
 
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 11111');
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== component: ', component);
+
       const content = ReactDOM.renderToString(component);
+
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 22222');
 
       if (context.url) {
         return res.redirect(302, context.url);
@@ -348,8 +360,8 @@ export default function (parameters) {
 
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > DID IT !! res.status(200).send <<<<<<<<<<<<<<<<<<');
 
-      res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
-      // res.status(200).send(`<!doctype html>${ReactDOM.renderToString(html)}`);
+      // res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
+      res.status(200).send(`<!doctype html>${ReactDOM.renderToString(html)}`);
 
     } catch (error) {
 

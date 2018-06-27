@@ -46,10 +46,6 @@ export function load() {
   console.log('>>>>>>>>>>>>> Redux > Modules > INFO.JS > load() > client.get(/api/info/load) 1 <<<<<<<<<<<<<<<');
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: client => {
-      console.log('>>>>>>>>>>>>> Redux > Modules > INFO.JS > load() > client.get(/api/info/load) 2 <<<<<<<<<<<<<<<');
-      client.get('/api/info/load');
-      // client.get('/info/load');
-    }
+    promise: ({ client }) => client.get('/load-info')
   };
 }

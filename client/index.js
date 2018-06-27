@@ -76,6 +76,9 @@ initSocket();
 
 console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS <<<<<<<<<<<<<<<<<<<<<<<<<<<');
 console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > __DEVTOOLS__ !!!!!: ', __DEVTOOLS__);
+console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > persistConfig !!!!!: ', persistConfig);
+console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > app !!!!!: ', app);
+console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > client !!!!!: ', client);
 
 // =====================================================================
 // 
@@ -84,7 +87,7 @@ console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > __DEVTOOLS__ !!!!!: ', __DEVTO
 (async () => {
 
   const preloadedState = await getStoredState(persistConfig);
-  console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > storedData: ', storedData);
+  console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > preloadedState: ', preloadedState);
 
   const online = window.__data ? true : await isOnline();
 

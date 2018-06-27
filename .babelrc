@@ -3,7 +3,7 @@
     "react",
     ["env", {
       "targets": {
-        "browsers": ["last 2 versions", "safari >= 7"],
+        "browsers": ["last 2 versions", "IE >= 8"]
       }
     }],
     "stage-0"
@@ -15,15 +15,6 @@
     "add-module-exports",
     "transform-class-properties",
     "react-loadable/babel",
-    "react-hot-loader/babel",
-  ],
+    "react-hot-loader/babel"
+  ]
 }
-
-
-// "transform-object-rest-spread",
-// "transform-runtime",
-// "transform-decorators-legacy",
-// "add-module-exports",
-// "transform-class-properties",
-// "react-loadable/babel",
-// "react-hot-loader/babel",

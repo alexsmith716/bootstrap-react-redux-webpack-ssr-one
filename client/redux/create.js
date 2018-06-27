@@ -1,23 +1,26 @@
 import { createStore as _createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
-import { createPersistoid } from 'redux-persist';
-import createMiddleware from './middleware/clientMiddleware';
+import { createPersistoid, persistCombineReducers, REGISTER } from 'redux-persist';
+import clientMiddleware from './middleware/clientMiddleware';
 import createReducers from './reducer';
 
-export function inject(store, name, asyncReducer) {
-  console.log('>>>>>>>>> CREATE.JS > INJECT 111111');
-  if (store.asyncReducers[name]) return;
-  console.log('>>>>>>>>> CREATE.JS > INJECT 222222');
-  console.log('>>>>>>>>> CREATE.JS > INJECT store: ', store);
-  console.log('>>>>>>>>> CREATE.JS > INJECT name: ', name);
-  console.log('>>>>>>>>> CREATE.JS > INJECT asyncReducer: ', asyncReducer);
-  store.asyncReducers[name] = asyncReducer;
-  console.log('>>>>>>>>> CREATE.JS > INJECT store.asyncReducers: ', store.asyncReducers);
-  store.replaceReducer(combineReducers(createReducers(store.asyncReducers)));
+function combine(reducers, persistConfig) {
+  if (persistConfig) {
+    return persistCombineReducers(persistConfig, reducers);
+  }
+  return combineReducers(reducers);
 }
 
-function getMissingReducers(reducers, data) {
-  console.log('>>>>>>>>> CREATE.JS > getMissingReducers');
+export function inject(store, reducers, persistConfig) {
+  Object.entries(reducers).forEach(([name, reducer]) => {
+    if (store.asyncReducers[name]) return;
+    store.asyncReducers[name] = reducer.__esModule ? reducer.default : reducer;
+  });
+
+  store.replaceReducer(combine(createReducers(store.asyncReducers), persistConfig));
+}
+
+function getNoopReducers(reducers, data) {
   if (!data) return {};
   return Object.keys(data).reduce(
     (prev, next) => (reducers[next] ? prev : { ...prev, [next]: (state = {}) => state }),
@@ -25,57 +28,53 @@ function getMissingReducers(reducers, data) {
   );
 }
 
-export default function createStore(history, client, data, persistConfig = null) {
-  console.log('>>>>>>>>> CREATE.JS > history: ', history);
-  console.log('>>>>>>>>> CREATE.JS > client: ', client);
-  console.log('>>>>>>>>> CREATE.JS > data: ', data);
-  console.log('>>>>>>>>> CREATE.JS > persistConfig: ', persistConfig);
-  const middleware = [createMiddleware(client), routerMiddleware(history)];
-  console.log('>>>>>>>>> CREATE.JS > middleware: ', middleware);
-  let enhancers = [applyMiddleware(...middleware)];
+export default function createStore({
+  history, data, helpers, persistConfig
+}) {
+  const middleware = [clientMiddleware(helpers), routerMiddleware(history)];
 
-  if (__CLIENT__ && __DEVTOOLS__) {
-    console.log('>>>>>>>>> CREATE.JS > YES __CLIENT__ && __DEVTOOLS__1');
-    const { persistState } = require('redux-devtools');
-    console.log('>>>>>>>>> CREATE.JS > YES __CLIENT__ && __DEVTOOLS__2');
-    const DevTools = require('../containers/DevTools/DevTools');
-    console.log('>>>>>>>>> CREATE.JS > YES __CLIENT__ && __DEVTOOLS__3');
-    console.log('>>>>>>>>> CREATE.JS > YES __CLIENT__ && __DEVTOOLS__4: ', enhancers);
-    console.log('>>>>>>>>> CREATE.JS > YES __CLIENT__ && __DEVTOOLS__5: ', window.devToolsExtension);
-    const m = window.location.href.match(/[?&]debug_session=([^&]+)\b/) 
-    console.log('>>>>>>>>> CREATE.JS > YES __CLIENT__ && __DEVTOOLS__6: ', m);
-    enhancers = [
-      ...enhancers,
-      window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
-      persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
-    ];
-    console.log('>>>>>>>>> CREATE.JS > YES __CLIENT__ && __DEVTOOLS__ > enhancers: ', enhancers);
+  if (__CLIENT__ && __DEVELOPMENT__) {
+    const logger = require('redux-logger').createLogger({
+      collapsed: true
+    });
+    middleware.push(logger.__esModule ? logger.default : logger);
   }
 
-  console.log('>>>>>>>>> CREATE.JS > enhancers: ', enhancers);
-  console.log('>>>>>>>>> CREATE.JS > persistConfig: ', persistConfig);
+  const enhancers = [applyMiddleware(...middleware)];
+
+  if (__CLIENT__ && __DEVTOOLS__) {
+    const { persistState } = require('redux-devtools');
+    const DevTools = require('../containers/DevTools/DevTools');
+
+    Array.prototype.push.apply(enhancers, [
+      window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
+      persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
+    ]);
+  }
 
   const finalCreateStore = compose(...enhancers)(_createStore);
-  const missingReducers = getMissingReducers(createReducers(), data);
-  const store = finalCreateStore(combineReducers(createReducers(missingReducers)), data);
+  const reducers = createReducers();
+  const noopReducers = getNoopReducers(reducers, data);
+  const store = finalCreateStore(combine({ ...noopReducers, ...reducers }, persistConfig), data);
 
   store.asyncReducers = {};
-  store.inject = inject.bind(null, store);
+  store.inject = _reducers => inject(store, _reducers, persistConfig);
 
   if (persistConfig) {
-    console.log('>>>>>>>>> CREATE.JS > persistConfig: ', persistConfig);
-    console.log('>>>>>>>>> CREATE.JS > persistConfig > store: ', store);
-    createPersistoid(store, persistConfig);
-    store.dispatch({ type: 'PERSIST' });
+    const persistoid = createPersistoid(persistConfig);
+    store.subscribe(() => {
+      persistoid.update(store.getState());
+    });
+    store.dispatch({ type: REGISTER });
   }
 
   if (__DEVELOPMENT__ && module.hot) {
-    console.log('>>>>>>>>> CREATE.JS > YES __DEVELOPMENT__ && module.hot');
     module.hot.accept('./reducer', () => {
-      let reducer = require('./reducer').default;
-      store.replaceReducer(combineReducers((reducer.default || reducer)(store.asyncReducers)));
+      let reducer = require('./reducer');
+      reducer = combine((reducer.__esModule ? reducer.default : reducer)(store.asyncReducers), persistConfig);
+      store.replaceReducer(reducer);
     });
   }
-  console.log('>>>>>>>>> CREATE.JS > store: ', store);
+
   return store;
 }
