@@ -1,12 +1,12 @@
-// import authentication from './authentication';
+import authentication from './authentication';
 import custom from './custom';
-import users from './users';
-import messages from './messages';
+// import users from './users';
+// import messages from './messages';
 
 
 export default function services(app) {
 
-  app.configure(authentication);
+  // app.configure(authentication);
 
   app.configure(custom);
 

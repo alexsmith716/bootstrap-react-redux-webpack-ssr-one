@@ -2,7 +2,6 @@ import feathers from '@feathersjs/feathers';
 import rest from '@feathersjs/rest-client';
 import socketio from '@feathersjs/socketio-client';
 import authentication from '@feathersjs/authentication-client';
-
 import io from 'socket.io-client';
 import axios from 'axios';
 import config from '../config/config';

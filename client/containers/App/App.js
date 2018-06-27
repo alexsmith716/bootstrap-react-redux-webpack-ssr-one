@@ -1,53 +1,59 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { asyncConnect } from 'redux-connect';
+import { withRouter } from 'react-router';
+import { push } from 'react-router-redux';
 import renderRoutes from 'react-router-config/renderRoutes';
+import { provideHooks } from 'redial';
 import Helmet from 'react-helmet';
+import qs from 'qs';
 
 import { isLoaded as isInfoLoaded, load as loadInfo } from '../../redux/modules/info';
-import { isAuthLoaded, loadAuth, logout } from '../../redux/modules/auth';
+import { isLoaded as isAuthLoaded, load as loadAuth, logout } from '../../redux/modules/auth';
 
-import Notifs from '../../components/Notifs/Notifs';
+// import Notifs from '../../components/Notifs/Notifs';
 import config from '../../../config/config';
 
 // https://reactjs.org/docs/dom-elements.html <<<<<<<<< DOM attributes supported by React
 // https://github.com/facebook/react/issues/10772#issuecomment-333242375
 
-@asyncConnect([
-  {
-    promise: async ({ store: { dispatch, getState } }) => {
-      console.log('>>>>>>>>>>>>> APP.JS > asyncConnect > isAuthLoaded FALSE ??? <<<<<<<<<<<<<<<<<<<');
-      if (!isAuthLoaded(getState())) {
-        console.log('>>>>>>>>>>>>> APP.JS > asyncConnect > isAuthLoaded FALSE <<<<<<<<<<<<<<<<<');
-        await dispatch(loadAuth());
-      }
-      console.log('>>>>>>>>>>>>> APP.JS > asyncConnect > isInfoLoaded FALSE ??? <<<<<<<<<<<<<<<<<<<');
-      if (!isInfoLoaded(getState())) {
-        console.log('>>>>>>>>>>>>> APP.JS > asyncConnect > isInfoLoaded FALSE <<<<<<<<<<<<<<<<<');
-        await dispatch(loadInfo());
-      }
+@provideHooks({
+  fetch: async ({ store: { dispatch, getState } }) => {
+    const a = isAuthLoaded(getState());
+    console.log('>>>>>>>>>>>>> APP.JS > 1111111111111111111111111111111111111 <<<<<<<<<<<<<< a: ', a);
+    const b = isInfoLoaded(getState());
+    console.log('>>>>>>>>>>>>> APP.JS > 2222222222222222222222222222222222222 <<<<<<<<<<<<<< b: ', b);
+    if (!isAuthLoaded(getState())) {
+      console.log('>>>>>>>>>>>>> APP.JS > 1111111111111111111111111111111111111 <<<<<<<<<<<<<< aaaaaa');
+      await dispatch(loadAuth()).catch(() => null);
+    }
+    if (!isInfoLoaded(getState())) {
+      console.log('>>>>>>>>>>>>> APP.JS > 2222222222222222222222222222222222222 <<<<<<<<<<<<<< bbbbbb');
+      await dispatch(loadInfo()).catch(() => null);
     }
   }
-])
+})
 
 @connect(
   state => ({
-    notifs: state.notifs,
+    // notifs: state.notifs,
     user: state.auth.user
   }),
-  {
-    logout
-  }
+  { logout, pushState: push }
 )
 
+@withRouter
+
 export default class App extends Component {
+
   static propTypes = {
-    user: PropTypes.shape({ email: PropTypes.string }),
-    notifs: PropTypes.shape({ global: PropTypes.array }).isRequired,
-    logout: PropTypes.func.isRequired,
     route: PropTypes.objectOf(PropTypes.any).isRequired,
-    location: PropTypes.objectOf(PropTypes.any).isRequired
+    location: PropTypes.objectOf(PropTypes.any).isRequired,
+    user: PropTypes.shape({email: PropTypes.string}),
+    // notifs: PropTypes.shape({global: PropTypes.array}).isRequired,
+    logout: PropTypes.func.isRequired,
+    pushState: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -56,26 +62,38 @@ export default class App extends Component {
 
   static contextTypes = {
     store: PropTypes.object.isRequired,
-    router: PropTypes.shape({
-      history: PropTypes.object.isRequired
-    })
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (!this.props.user && nextProps.user) {
-  //     this.context.router.history.push('/loginSuccess');
-  //   } else if (this.props.user && !nextProps.user) {
-  //     this.context.router.history.push('/');
-  //   }
-  // }
-  // <span className="navbar-toggler-icon"></span>
-  // <img src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNzc3Nzc3IiBoZWlnaHQ9IjMyIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz4KICAgIDxwYXRoIGQ9Ik0zIDE4aDE4di0ySDN2MnptMC01aDE4di0ySDN2MnptMC03djJoMThWNkgzeiIvPgo8L3N2Zz4=" alt="Nav Menu">
-  // <img src={iconBar36} alt="Nav Menu"/>
+  static getDerivedStateFromProps(props, state) {
+    const { prevProps } = state;
+    // Compare the incoming prop to previous prop
+    const user = !_.isEqual(prevProps.user, props.user) ? props.user : state.user;
 
-  // <li className="nav-item">
-  //   <a className="nav-link" href="#"><span className={`fa fa-headphones ${stylesScss2.colorGoldLocal}`}></span><span className={stylesScss2.colorGoldLocal}>Headphones!</span></a>
-  // </li>
+    if (!prevProps.user && props.user) {
+      const query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
+      props.pushState(query.redirect || '/login-success');
+    } else if (prevProps.user && !props.user) {
+      // logout
+      props.pushState('/');
+    }
 
+    return {
+      // Store the previous props in state
+      prevProps: props,
+      user
+    };
+  }
+
+  state = {
+    prevProps: this.props,
+    user: this.props.user
+  };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.location !== prevProps.location) {
+      window.scrollTo(0, 0);
+    }
+  }
 
   handleLogout = event => {
     event.preventDefault();
@@ -84,7 +102,9 @@ export default class App extends Component {
 
   render() {
 
-    const { notifs, route } = this.props;
+    // const { notifs, route } = this.props;
+    const { route } = this.props;
+    const { user } = this.state;
     console.log('>>>>>>>>>>>>> APP.JS > render() <<<<<<<<<<<<<<');
     const stylesScss1 = require('./scss/AppScss1.scss');
     const stylesScss2 = require('./scss/AppScss2.scss');

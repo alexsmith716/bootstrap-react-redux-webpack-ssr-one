@@ -20,8 +20,22 @@ app.set('config', config);
 app.use(morgan('dev'));
 app.use(cookieParser());
 
-// saveUninitialized: false, // don't create session until something stored
-// resave: false, // don't save session if unmodified
+
+app.use((req, res, next) => {
+  console.log('>>>>>>>>>>>>>>>>> API > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+  // console.log('>>>>>>>>>>>>>>>>> API > REQ.ip +++++++++++++: ', req.ip);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.method +++++++++: ', req.method);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.url ++++++++++++: ', req.url);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.headers ++++++++: ', req.headers);
+  // console.log('>>>>>>>>>>>>>>>>> API > REQ.session ++++++++: ', req.session);
+  // console.log('>>>>>>>>>>>>>>>>> API > REQ.params +++++++++: ', req.params);
+  // console.log('>>>>>>>>>>>>>>>>> API > REQ.originalUrl ++++: ', req.originalUrl);
+  console.log('>>>>>>>>>>>>>>>>> API > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN < $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+  return next();
+});
+
+// saveUninitialized: false,  // don't create session until something stored
+// resave: false,             // don't save session if unmodified
 
 app.use(session({
   secret: serverConfig.sessionSecret,

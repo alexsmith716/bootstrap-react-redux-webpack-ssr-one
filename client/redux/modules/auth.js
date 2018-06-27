@@ -1,4 +1,4 @@
-// import { SubmissionError } from 'redux-form';
+import { FORM_ERROR } from 'final-form';
 import jsCookie from 'js-cookie';
 
 const LOAD = 'redux-example/auth/LOAD';
@@ -49,6 +49,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loggingIn: false,
+        loaded: true,
         accessToken: action.result.accessToken,
         user: action.result.user
       };
@@ -77,8 +78,7 @@ export default function reducer(state = initialState, action = {}) {
     case LOGOUT:
       return {
         ...state,
-        accessToken: null,
-        user: null
+        loggingOut: true
       };
     case LOGOUT_SUCCESS:
       return {
@@ -101,38 +101,59 @@ export default function reducer(state = initialState, action = {}) {
 const catchValidation = error => {
   if (error.message) {
     if (error.message === 'Validation failed' && error.data) {
-      throw new SubmissionError(error.data);
+      return Promise.reject(error.data);
     }
-    throw new SubmissionError({ _error: error.message });
+    const err = {
+      [FORM_ERROR]: error.message
+    };
+    return Promise.reject(err);
   }
   return Promise.reject(error);
 };
 
-/*
-* Actions
-*/
+function setCookie({ app }) {
+  return async response => {
+    const payload = await app.passport.verifyJWT(response.accessToken);
+    const options = payload.exp ? { expires: new Date(payload.exp * 1000) } : undefined;
 
-export function isAuthenticated(state) {
-  const ia = state.auth && state.auth.user;
-  console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > isAuthenticated ???: ', ia);
-  return ia;
+    cookie.set('feathers-jwt', response.accessToken, options);
+  };
 }
 
-export function isAuthLoaded(state) {
-  const il = state.auth && state.auth.loaded;
-  console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > isAuthLoaded ???: ', il);
-  return il;
+function setToken({ client, app }) {
+  return response => {
+    const { accessToken } = response;
+
+    app.set('accessToken', accessToken);
+    client.setJwtToken(accessToken);
+  };
 }
 
-export function loadAuth() {
-  console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth() > client.post(/api/auth/load) 1 <<<<<<<<<<<<<<<');
+function setUser({ app }) {
+  return response => {
+    app.set('user', response.user);
+  };
+}
+
+
+
+
+export function isLoaded(globalState) {
+  return globalState.auth && globalState.auth.loaded;
+}
+
+export function load() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: async client => {
-      const result = await client.post('/api/auth/load');
-      // const result = await client.post('/auth/load');
-      console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth() > client.post(/api/auth/load) 2 <<<<<<<<<<<<<<<: ', result);
-      return result;
+    promise: async ({ app, client }) => {
+      const response = await app.authenticate();
+      await setCookie({ app })(response);
+      setToken({
+        client,
+        app
+      })(response);
+      setUser({ app })(response);
+      return response;
     }
   };
 }
@@ -140,33 +161,51 @@ export function loadAuth() {
 export function register(data) {
   return {
     types: [REGISTER, REGISTER_SUCCESS, REGISTER_FAIL],
-    promise: async client => {
-      const result = client.post('/api/auth/register', { ...data, fullName: 'AuthJSFullName' });
-      // const result = client.post('/auth/register', { ...data, fullName: 'AuthJSFullName' });
-      return result;
-    }
+    promise: ({ app }) =>
+      app
+        .service('users')
+        .create(data)
+        .catch(catchValidation)
   };
 }
 
-export function login(data) {
+export function login(strategy, data) {
   return {
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-    promise: async client => {
+    promise: async ({ client, app }) => {
       try {
-        const result = await client.post('/api/auth/login', { ...data, source: 'webapp' });
-        // const result = await client.post('/auth/login', { ...data, source: 'webapp' });
-        jsCookie.set('accessToken', result.accessToken);
-        return result;
+        const response = await app.authenticate({
+          ...data,
+          strategy
+        });
+        await setCookie({ app })(response);
+        setToken({
+          client,
+          app
+        })(response);
+        setUser({ app })(response);
+        return response;
       } catch (error) {
-        return catchValidation(error);
+        if (strategy === 'local') {
+          return catchValidation(error);
+        }
+        throw error;
       }
     }
   };
 }
 
 export function logout() {
-  jsCookie.remove('accessToken');
   return {
-    type: LOGOUT
+    types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
+    promise: async ({ client, app }) => {
+      await app.logout();
+      setToken({
+        client,
+        app
+      })({ accessToken: null });
+      setUser({ app })({ user: null });
+      cookie.set('feathers-jwt', '');
+    }
   };
 }
