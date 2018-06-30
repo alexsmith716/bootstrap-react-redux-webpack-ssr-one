@@ -146,6 +146,7 @@ export function isLoaded(globalState) {
 export function load() {
   const lA = async ({ app, client }) => {
     const response = await app.authenticate();
+    console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth > app.authenticate(): ', response);
     await setCookie({ app })(response);
     setToken({
       client,
