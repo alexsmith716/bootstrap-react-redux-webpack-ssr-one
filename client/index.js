@@ -15,7 +15,7 @@ import asyncMatchRoutes from '../server/utils/asyncMatchRoutes';
 import { AppContainer as HotEnabler } from 'react-hot-loader';
 import Loadable from 'react-loadable';
 
-import routes from './routes';
+import routes from '../shared/routes';
 import isOnline from '../server/utils/isOnline';
 
 import createBrowserHistory from 'history/createBrowserHistory';

@@ -135,28 +135,33 @@ function setUser({ app }) {
   };
 }
 
-
-
+// ============================================================================================
 
 export function isLoaded(globalState) {
-  return globalState.auth && globalState.auth.loaded;
+  const iAL = globalState.auth && globalState.auth.loaded;
+  console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > isAuthLoaded: ', iAL);
+  return iAL;
 }
 
 export function load() {
+  const lA = async ({ app, client }) => {
+    const response = await app.authenticate();
+    await setCookie({ app })(response);
+    setToken({
+      client,
+      app
+    })(response);
+    setUser({ app })(response);
+    return response;
+  }
+  console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth: ', lA);
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: async ({ app, client }) => {
-      const response = await app.authenticate();
-      await setCookie({ app })(response);
-      setToken({
-        client,
-        app
-      })(response);
-      setUser({ app })(response);
-      return response;
-    }
+    promise: lA
   };
 }
+
+// ============================================================================================
 
 export function register(data) {
   return {

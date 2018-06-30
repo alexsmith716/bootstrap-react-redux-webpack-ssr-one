@@ -6,7 +6,7 @@ import custom from './custom';
 
 export default function services(app) {
 
-  // app.configure(authentication);
+  app.configure(authentication);
 
   app.configure(custom);
 

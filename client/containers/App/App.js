@@ -9,10 +9,11 @@ import { provideHooks } from 'redial';
 import Helmet from 'react-helmet';
 import qs from 'qs';
 
-import { isLoaded as isInfoLoaded, load as loadInfo } from '../../redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from '../../redux/modules/auth';
+import { isLoaded as isInfoLoaded, load as loadInfo } from '../../redux/modules/info';
 
-// import Notifs from '../../components/Notifs/Notifs';
+// import { Notifs, InfoBar } from '../../components';
+import { Notifs } from '../../components';
 import config from '../../../config/config';
 
 // https://reactjs.org/docs/dom-elements.html <<<<<<<<< DOM attributes supported by React
@@ -20,16 +21,17 @@ import config from '../../../config/config';
 
 @provideHooks({
   fetch: async ({ store: { dispatch, getState } }) => {
-    const a = isAuthLoaded(getState());
-    console.log('>>>>>>>>>>>>> APP.JS > 1111111111111111111111111111111111111 <<<<<<<<<<<<<< a: ', a);
-    const b = isInfoLoaded(getState());
-    console.log('>>>>>>>>>>>>> APP.JS > 2222222222222222222222222222222222222 <<<<<<<<<<<<<< b: ', b);
-    if (!isAuthLoaded(getState())) {
-      console.log('>>>>>>>>>>>>> APP.JS > 1111111111111111111111111111111111111 <<<<<<<<<<<<<< aaaaaa');
+
+    const iSL = isAuthLoaded(getState());
+    console.log('>>>>>>>>>>>>> APP.JS > @provideHooks > isAuthLoaded ??: ', iSL);
+    const iIL = isInfoLoaded(getState());
+    console.log('>>>>>>>>>>>>> APP.JS > @provideHooks > isInfoLoaded ??: ', iIL);
+
+    if (!iSL) {
       await dispatch(loadAuth()).catch(() => null);
     }
-    if (!isInfoLoaded(getState())) {
-      console.log('>>>>>>>>>>>>> APP.JS > 2222222222222222222222222222222222222 <<<<<<<<<<<<<< bbbbbb');
+
+    if (!iIL) {
       await dispatch(loadInfo()).catch(() => null);
     }
   }
@@ -37,7 +39,7 @@ import config from '../../../config/config';
 
 @connect(
   state => ({
-    // notifs: state.notifs,
+    notifs: state.notifs,
     user: state.auth.user
   }),
   { logout, pushState: push }
@@ -51,7 +53,7 @@ export default class App extends Component {
     route: PropTypes.objectOf(PropTypes.any).isRequired,
     location: PropTypes.objectOf(PropTypes.any).isRequired,
     user: PropTypes.shape({email: PropTypes.string}),
-    // notifs: PropTypes.shape({global: PropTypes.array}).isRequired,
+    notifs: PropTypes.shape({global: PropTypes.array}).isRequired,
     logout: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired
   };
@@ -102,8 +104,7 @@ export default class App extends Component {
 
   render() {
 
-    // const { notifs, route } = this.props;
-    const { route } = this.props;
+    const { notifs, route } = this.props;
     const { user } = this.state;
     console.log('>>>>>>>>>>>>> APP.JS > render() <<<<<<<<<<<<<<');
     const stylesScss1 = require('./scss/AppScss1.scss');
@@ -162,6 +163,7 @@ export default class App extends Component {
           {notifs.global && (
             <div>
               <Notifs
+                className={stylesScss1.notifs}
                 namespace="global"
                 NotifComponent={props => <div>{props.message}</div>}
               />
