@@ -1,6 +1,6 @@
 import authentication from './authentication';
 import custom from './custom';
-// import users from './users';
+import users from './users';
 // import messages from './messages';
 
 
@@ -10,7 +10,7 @@ export default function services(app) {
 
   app.configure(custom);
 
-  // app.configure(users);
+  app.configure(users);
 
   // app.configure(messages);
 
