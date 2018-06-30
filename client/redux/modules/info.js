@@ -35,17 +35,21 @@ export default function info(state = initialState, action = {}) {
   }
 }
 
+// ============================================================================================
+
 export function isLoaded(globalState) {
-  console.log('>>>>>>>>>>>>> Redux > Modules > INFO.JS > 22 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-  const il = globalState.info && globalState.info.loaded;
-  console.log('>>>>>>>>>>>>> Redux > Modules > INFO.JS > isInfoLoaded ???: ', il);
-  return il;
+  const iIL = globalState.info && globalState.info.loaded;
+  console.log('>>>>>>>>>>>>> Redux > Modules > INFO.JS > isInfoLoaded(): ', iIL);
+  return iIL;
 }
 
 export function load() {
-  console.log('>>>>>>>>>>>>> Redux > Modules > INFO.JS > load() > client.get(/api/info/load) 1 <<<<<<<<<<<<<<<');
+  const lI = ({ client }) => client.get('/load-info');
+  console.log('>>>>>>>>>>>>> Redux > Modules > INFO.JS > loadInfo(): ', lI);
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: ({ client }) => client.get('/load-info')
+    promise: lI
   };
 }
+
+// ============================================================================================

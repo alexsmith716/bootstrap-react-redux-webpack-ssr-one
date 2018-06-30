@@ -43,7 +43,7 @@ import { getBundles } from 'react-loadable/webpack';
 import { trigger } from 'redial';
 
 import Html from './helpers/Html';
-import routes from '../client/routes';
+import routes from '../shared/routes';
 import { parse as parseUrl } from 'url';
 
 import { createApp } from './app';
@@ -298,6 +298,12 @@ export default function (parameters) {
 
       const { components, match, params } = await asyncMatchRoutes(routes, req.path);
 
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 components: ', components);
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 match: ', match);
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 params: ', params);
+
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 store: ', store);
+
       await trigger('fetch', components, {
         ...providers,
         store,
@@ -331,12 +337,11 @@ export default function (parameters) {
         </Loadable.Capture>
       );
 
-      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 11111');
-      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== component: ', component);
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 2 component: ', component);
 
       const content = ReactDOM.renderToString(component);
 
-      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 22222');
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 2 content: ', content);
 
       if (context.url) {
         return res.redirect(302, context.url);
