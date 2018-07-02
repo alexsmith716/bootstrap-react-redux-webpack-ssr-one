@@ -1,5 +1,5 @@
 import { routerActions } from 'react-router-redux';
-// import { connectedReduxRedirect } from 'redux-auth-wrapper/history4/redirect';
+import { connectedReduxRedirect } from 'redux-auth-wrapper/history4/redirect';
 
 import { App, Home, NotFound } from '../client/containers';
 
@@ -12,7 +12,6 @@ import { App, Home, NotFound } from '../client/containers';
 // import AboutToo from '../client/containers/AboutToo/Loadable';
 // import AboutThree from '../client/containers/AboutThree/Loadable';
 // import AboutFour from '../client/containers/AboutFour/Loadable';
-
 
 // const isAuthenticated = connectedReduxRedirect({
 //   redirectPath: '/login',

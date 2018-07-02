@@ -76,12 +76,11 @@ app.configure(socketio({ path: '/ws' }));
 app.use((req, res, next) => {
   console.log('>>>>>>>>>>>>>>>>> API > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   // console.log('>>>>>>>>>>>>>>>>> API > REQ.ip +++++++++++++: ', req.ip);
-    console.log('>>>>>>>>>>>>>>>>> API > REQ.method +++++++++++++++: ', req.method);
-    console.log('>>>>>>>>>>>>>>>>> API > REQ.url ++++++++++++++++++: ', req.url);
-    console.log('>>>>>>>>>>>>>>>>> API > REQ.headers ++++++++++++++: ', req.headers);
-    console.log('>>>>>>>>>>>>>>>>> API > REQ.cookies ++++++++++++++: ', req.cookies);
-    console.log('>>>>>>>>>>>>>>>>> API > REQ.signedCookies ++++++++: ', req.signedCookies);
-    console.log('>>>>>>>>>>>>>>>>> API > REQ.session ++++++++: ', req.session);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.method +++++++++++++++: ', req.method);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.url ++++++++++++++++++: ', req.url);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.headers ++++++++++++++: ', req.headers);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.cookies ++++++++++++++: ', req.cookies);
+  console.log('>>>>>>>>>>>>>>>>> API > REQ.session ++++++++: ', req.session);
   // console.log('>>>>>>>>>>>>>>>>> API > REQ.params +++++++++: ', req.params);
   // console.log('>>>>>>>>>>>>>>>>> API > REQ.originalUrl ++++: ', req.originalUrl);
   console.log('>>>>>>>>>>>>>>>>> API > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN < $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');

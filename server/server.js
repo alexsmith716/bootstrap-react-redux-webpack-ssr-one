@@ -170,8 +170,7 @@ export default function (parameters) {
     console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.url ++++++++++++++++++: ', req.url);
     console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.headers ++++++++++++++: ', req.headers);
     console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.cookies ++++++++++++++: ', req.cookies);
-    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.signedCookies ++++++++: ', req.signedCookies);
-    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.session ++++++++: ', req.session);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.session ++++++++: ', req.session);
     // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.params +++++++++: ', req.params);
     // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.originalUrl ++++: ', req.originalUrl);
     console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN < $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
@@ -190,12 +189,12 @@ export default function (parameters) {
   // #########################################################################
 
   app.use('/api', (req, res) => {
-    console.log('>>>>>>>>>>>>>>>> server.js > app.user(/API) <<<<<<<<<<<<<<<<');
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ /API $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
     proxy.web(req, res, { target: targetUrl });
   });
 
   app.use('/ws', (req, res) => {
-    console.log('>>>>>>>>>>>>>>>> server.js > app.user(/WS) <<<<<<<<<<<<<<<<');
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ /WS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
     proxy.web(req, res, { target: `${targetUrl}/ws` });
   });
 
@@ -234,6 +233,8 @@ export default function (parameters) {
   // });
 
   app.use(async (req, res) => {
+
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ / $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
 
     const chunks = parameters.chunks();
     // const chunks = {...parameters.chunks()};
@@ -281,10 +282,12 @@ export default function (parameters) {
     //    auth: {loaded: false,loading: false,error: {}},
     //    info: {loaded: true,loading: false,data: {message: 'This came from the api server',time: 1530540780215}}
     //    }
+
     try {
       preloadedState = await getStoredState(persistConfig);
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > preloadedState !! =======================: ', preloadedState);
     } catch (e) {
-      // getStoredState implementation fails when index storage item is not set.
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > preloadedState {} =======================');
       preloadedState = {};
     }
 
@@ -369,11 +372,11 @@ export default function (parameters) {
         return res.redirect(302, context.url);
       }
 
-      const locationState = store.getState().router.location;
+      // const locationState = store.getState().router.location;
 
-      if (req.originalUrl !== locationState.pathname + locationState.search) {
-        return res.redirect(301, locationState.pathname);
-      }
+      // if (req.originalUrl !== locationState.pathname + locationState.search) {
+      //   return res.redirect(301, locationState.pathname);
+      // }
 
       const bundles = getBundles(getChunks(), modules);
 
