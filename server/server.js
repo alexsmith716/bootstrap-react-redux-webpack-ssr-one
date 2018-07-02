@@ -301,7 +301,9 @@ export default function (parameters) {
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 components: ', components);
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 match: ', match);
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 params: ', params);
-
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 persistConfig: ', persistConfig);
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 preloadedState: ', preloadedState);
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 providers: ', providers);
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > ===================================== 1 store: ', store);
 
       await trigger('fetch', components, {

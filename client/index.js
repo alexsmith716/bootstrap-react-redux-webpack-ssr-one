@@ -148,40 +148,41 @@ console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > client !!!!!: ', client);
   await Loadable.preloadReady();
   await hydrate(routes);
 
-  if (module.hot) {
-    console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > MODULE.HOT! <<<<<<<<<<<<<<<<<');
-    module.hot.accept('./routes', () => {
-      hydrate(require('./routes'));
-    });
-  } else {
-    console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > NO MODULE.HOT! <<<<<<<<<<<<<<');
-  }
+  // if (module.hot) {
+  //   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > MODULE.HOT! <<<<<<<<<<<<<<<<<');
+  //   module.hot.accept('./routes', () => {
+  //     hydrate(require('./routes'));
+  //   });
+  // } else {
+  //   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > NO MODULE.HOT! <<<<<<<<<<<<<<');
+  // }
 
-  if (process.env.NODE_ENV !== 'production') {
-    window.React = React;
-    console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > process.env.NODE_ENV === DEV!!!');
+  // if (process.env.NODE_ENV !== 'production') {
+  //   window.React = React;
+  //   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > process.env.NODE_ENV === DEV!!!');
 
-    if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-reactroot']) {
-      console.error('Server-side React render was discarded.' +
-        'Make sure that your initial render does not contain any client-side code.');
-    }
-  }
+  //   if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-reactroot']) {
+  //     console.error('Server-side React render was discarded.' +
+  //       'Make sure that your initial render does not contain any client-side code.');
+  //   }
+  // }
 
-  if (__DEVTOOLS__ && !window.devToolsExtension) {
-    console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > __DEVTOOLS__ && NO window.devToolsExtension');
-    const devToolsDest = document.createElement('div');
-    window.document.body.insertBefore(devToolsDest, null);
-    const DevTools = require('./containers/DevTools/DevTools');
+  // if (__DEVTOOLS__ && !window.devToolsExtension) {
+  //   console.log('>>>>>>>>>>>>>>>>>>> CLIENT.JS > __DEVTOOLS__ && NO window.devToolsExtension');
+  //   const devToolsDest = document.createElement('div');
+  //   window.document.body.insertBefore(devToolsDest, null);
+  //   const DevTools = require('./containers/DevTools/DevTools');
 
-    ReactDOM.hydrate(
-      <Provider store={store} key="provider">
-        <DevTools />
-      </Provider>,
-      devToolsDest
-    );
-  }
+  //   ReactDOM.hydrate(
+  //     <Provider store={store} key="provider">
+  //       <DevTools />
+  //     </Provider>,
+  //     devToolsDest
+  //   );
+  // }
 
   if (!__DEVELOPMENT__ && 'serviceWorker' in navigator) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>> CLIENT.JS > !__DEVELOPMENT__ && serviceWorker in navigator <<<<<<<<<<<<<');
     try {
       const registration = await navigator.serviceWorker.register('/service-worker.js', { scope: '/' });
       registration.onupdatefound = () => {
