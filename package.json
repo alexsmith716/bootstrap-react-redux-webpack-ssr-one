@@ -6,11 +6,10 @@
   "author": "dev",
   "license": "MIT",
   "scripts": {
-    "start": "npm run production",
     "production": "concurrently --kill-others \"yarn production:server\" \"yarn production:api\"",
-    "production:build": "webpack --mode production --colors --display-error-details --config ./webpack/webpack.config.server.production.babel.js",
     "production:server": "NODE_ENV=production node ./bin/server.js",
     "production:api": "NODE_ENV=production node ./bin/api.js",
+    "production:build": "webpack --mode production --colors --display-error-details --config ./webpack/webpack.config.server.production.babel.js",
     "build": "NODE_ENV=production webpack --mode production --colors --display-error-details --config ./webpack/webpack.config.client.production.babel.js",
     "dlls": "webpack --colors --display-error-details --config webpack/vendor.config.js"
   },

@@ -118,19 +118,6 @@ export default function (parameters) {
   const port = normalizePort(serverConfig.port);
   app.set('port', port);
 
-  app.use((req, res, next) => {
-    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.ip +++++++++++++: ', req.ip);
-    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.method +++++++++: ', req.method);
-    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.url ++++++++++++: ', req.url);
-    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.headers ++++++++: ', req.headers);
-    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.session ++++++++: ', req.session);
-    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.params +++++++++: ', req.params);
-    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.originalUrl ++++: ', req.originalUrl);
-    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN < $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-    return next();
-  });
-
   app.use(morgan('dev'));
   app.use(helmet());
   app.use(helmet.xssFilter());
@@ -145,9 +132,7 @@ export default function (parameters) {
 
   // #########################################################################
 
-  // app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
-  // app.use(bodyParser.json({ limit: '20mb' }));
-  app.use(cookieParser());
+  app.use(cookieParser()); // parse cookie header and populate req.cookies
   app.use(compression());
   app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
   app.use(favicon(path.join(__dirname, '../public/static/favicon', 'favicon.ico')));
@@ -172,10 +157,37 @@ export default function (parameters) {
 
   // #########################################################################
 
+  // identify the originating IP address through an HTTP proxy or load balancer
   app.use((req, res, next) => {
     res.setHeader('X-Forwarded-For', req.ip);
     return next();
   });
+
+  app.use((req, res, next) => {
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.ip +++++++++++++: ', req.ip);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.method +++++++++++++++: ', req.method);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.url ++++++++++++++++++: ', req.url);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.headers ++++++++++++++: ', req.headers);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.cookies ++++++++++++++: ', req.cookies);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.signedCookies ++++++++: ', req.signedCookies);
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.session ++++++++: ', req.session);
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.params +++++++++: ', req.params);
+    // console.log('>>>>>>>>>>>>>>>>> SERVER > REQ.originalUrl ++++: ', req.originalUrl);
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ IN < $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+    return next();
+  });
+
+
+  // #########################################################################
+  // ############### ----------------- API -------------------- ##############
+  // #########################################################################
+
+
+  // PORT (3030)
+  // proxy any requests to '/api/*' >>>>>>>>> the API server
+  // all the data fetching calls from client go to '/api/*'
+  // #########################################################################
 
   app.use('/api', (req, res) => {
     console.log('>>>>>>>>>>>>>>>> server.js > app.user(/API) <<<<<<<<<<<<<<<<');
@@ -186,8 +198,6 @@ export default function (parameters) {
     console.log('>>>>>>>>>>>>>>>> server.js > app.user(/WS) <<<<<<<<<<<<<<<<');
     proxy.web(req, res, { target: `${targetUrl}/ws` });
   });
-
-  // #########################################################################
 
   // added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
   proxy.on('error', (error, req, res) => {
@@ -205,16 +215,23 @@ export default function (parameters) {
     res.end(JSON.stringify(json));
   });
 
+
+  // #########################################################################
+  // ############### ----------------- SERVER -------------------- ###########
+  // #########################################################################
+
+  // PORT (3000)
+  // 1) serve favicon
+  // 2) serve static content
+  // 3) initiate delegate rendering to `react-router`
+
+  // generate HTML page && return contents with 'react-router'
+
   // #########################################################################
 
   // app.use((req, res) => {
   //   res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
   // });
-
-
-  // #########################################################################
-  // generate HTML page && return contents with 'react-router'
-  // #########################################################################
 
   app.use(async (req, res) => {
 
@@ -259,6 +276,11 @@ export default function (parameters) {
     let preloadedState;
   
     // read stored cookies: getStoredState()
+    // preloadedState:
+    //    {
+    //    auth: {loaded: false,loading: false,error: {}},
+    //    info: {loaded: true,loading: false,data: {message: 'This came from the api server',time: 1530540780215}}
+    //    }
     try {
       preloadedState = await getStoredState(persistConfig);
     } catch (e) {
@@ -274,14 +296,12 @@ export default function (parameters) {
 
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > url: ', url);
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > location: ', location);
-    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > apiClient !!');
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > apiClient !!');
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > apiClient !!');
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createMemoryHistory !!');
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > history: '. history);
-    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! > createStore !!');
-    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > createStore !!');
     console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > store: ', store);
-    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! END !! $$$$$$$$$$$$$$$$$$$$$$$$$');
+    // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! END !! $$$$$$$$$$$$$$$$$$$$$$$$$');
 
     function hydrate() {
       res.write('<!doctype html>');
@@ -349,11 +369,11 @@ export default function (parameters) {
         return res.redirect(302, context.url);
       }
 
-      // const locationState = store.getState().router.location;
+      const locationState = store.getState().router.location;
 
-      // if (req.originalUrl !== locationState.pathname + locationState.search) {
-      //   return res.redirect(301, locationState.pathname);
-      // }
+      if (req.originalUrl !== locationState.pathname + locationState.search) {
+        return res.redirect(301, locationState.pathname);
+      }
 
       const bundles = getBundles(getChunks(), modules);
 
@@ -365,9 +385,8 @@ export default function (parameters) {
 
       const html = <Html assets={chunks} bundles={bundles} content={content} store={store} />;
 
-      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > DID IT !! res.status(200).send <<<<<<<<<<<<<<<<<<');
+      console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > DID IT !! > STATUS 200 !! <<<<<<<<<<<<<<<<<<');
 
-      // res.status(200).send('SERVER > Response Ended For Testing!!!!!!! Status 200!!!!!!!!!');
       res.status(200).send(`<!doctype html>${ReactDOM.renderToString(html)}`);
 
     } catch (error) {
