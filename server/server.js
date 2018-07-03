@@ -14,7 +14,6 @@ import http from 'http';
 import favicon from 'serve-favicon';
 import headers from './utils/headers';
 import delay from 'express-delay';
-import apiRouter from '../api/apiRouter';
 import mongoose from 'mongoose';
 import httpProxy from 'http-proxy';
 import Cookies from 'cookies';
@@ -304,8 +303,8 @@ export default function (parameters) {
 
     const store = createStore({
       history,
-      data: preloadedState
-      helpers: providers,
+      data: preloadedState,
+      helpers: providers
     });
 
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > url: ', url);
