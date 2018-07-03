@@ -8,10 +8,10 @@ import { App, Home, NotFound } from '../client/containers';
 // import About from '../client/containers/About/Loadable';
 // import LoginSuccess from '../client/containers/LoginSuccess/Loadable';
 
-// import AboutOne from '../client/containers/AboutOne/Loadable';
-// import AboutToo from '../client/containers/AboutToo/Loadable';
-// import AboutThree from '../client/containers/AboutThree/Loadable';
-// import AboutFour from '../client/containers/AboutFour/Loadable';
+import AboutOne from '../client/containers/AboutOne/Loadable';
+import AboutToo from '../client/containers/AboutToo/Loadable';
+import AboutThree from '../client/containers/AboutThree/Loadable';
+import AboutFour from '../client/containers/AboutFour/Loadable';
 
 // const isAuthenticated = connectedReduxRedirect({
 //   redirectPath: '/login',
@@ -32,10 +32,10 @@ const routes = [{
   component: App,
   routes: [
     { path: '/', exact: true, component: Home },
-    // { path: '/aboutone', component: AboutOne },
-    // { path: '/abouttoo', component: AboutToo },
-    // { path: '/aboutthree', component: AboutThree },
-    // { path: '/aboutfour', component: AboutFour },
+    { path: '/aboutone', component: AboutOne },
+    { path: '/abouttoo', component: AboutToo },
+    { path: '/aboutthree', component: AboutThree },
+    { path: '/aboutfour', component: AboutFour },
     // { path: '/about', component: About },
     // { path: '/login', component: Login },
     // { path: '/login-success', component: isAuthenticated(LoginSuccess) },
