@@ -226,13 +226,17 @@ configuration.plugins.push(
     template: path.join(rootPath, './server/navigateFallback.js'),
   }),
 
+  // use service workers to cache external dependencies
+  // generate 'service-worker.js' and add it to build directory
   new SWPrecacheWebpackPlugin({
     cacheId: 'bootstrap-redux-react-loadable-webpack-dllplugin-three',
     filename: 'service-worker.js',
     maximumFileSizeToCacheInBytes: 8388608,
 
+    // omit these bundle assets from being cached
     staticFileGlobs: [path.dirname(configuration.output.path) + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff,woff2}'],
-    // staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
+
+    // output path
     stripPrefix: path.dirname(configuration.output.path),
 
     directoryIndex: '/',

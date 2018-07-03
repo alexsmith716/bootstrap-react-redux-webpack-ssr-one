@@ -251,7 +251,7 @@ configuration.plugins.push(
   }),
 
   new SWPrecacheWebpackPlugin({
-    cacheId: 'bootstrap-redux-react-loadable-webpack-dllplugin-three',
+    cacheId: 'bootstrap-react-redux-webpack-ssr-one',
     filename: 'service-worker.js',
     maximumFileSizeToCacheInBytes: 8388608,
 

@@ -133,7 +133,8 @@ export default function (parameters) {
   // #########################################################################
 
   app.use(cookieParser()); // parse cookie header and populate req.cookies
-  app.use(compression());
+  app.use(compression()); // compress request response bodies
+
   app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
   app.use(favicon(path.join(__dirname, '../public/static/favicon', 'favicon.ico')));
   app.use('/manifest.json', (req, res) => res.sendFile(path.join(__dirname, '../public/static/manifest/manifest.json')));
@@ -148,6 +149,7 @@ export default function (parameters) {
   });
 
   app.use('/dlls/:dllName.js', (req, res, next) => {
+    console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ DLLs $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
     fs.access(
       path.join(__dirname, '..', 'build', 'public', 'assests', 'dlls', `${req.params.dllName}.js`),
       fs.constants.R_OK,
@@ -188,6 +190,7 @@ export default function (parameters) {
   // all the data fetching calls from client go to '/api/*'
   // #########################################################################
 
+
   app.use('/api', (req, res) => {
     console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ /API $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
     proxy.web(req, res, { target: targetUrl });
@@ -198,11 +201,14 @@ export default function (parameters) {
     proxy.web(req, res, { target: `${targetUrl}/ws` });
   });
 
+
   // added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
   proxy.on('error', (error, req, res) => {
+
     if (error.code !== 'ECONNRESET') {
       console.error('proxy error', error);
     }
+
     if (!res.headersSent) {
       res.writeHead(500, { 'content-type': 'application/json' });
     }
@@ -211,6 +217,7 @@ export default function (parameters) {
       error: 'proxy_error',
       reason: error.message
     };
+
     res.end(JSON.stringify(json));
   });
 
@@ -252,11 +259,14 @@ export default function (parameters) {
 
     console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! START !! $$$$$$$$$$$$$$$$$$$$$$');
 
+    // manage session history with 'history' object
     // manage session history (stack, navigate, confirm navigation, persist state between sessions)
     // initialEntries: initial URLs in the history stack
+    // createMemoryHistory: method used in Node (non-DOM)
     const history = createMemoryHistory({ initialEntries: [req.originalUrl] });
 
-    // redux persist cookie
+
+    // redux-persist-cookie-storage: redux persist cookie
     // Read-only mode: using getStoredState()
     // create cookie jar 'Cookies()'
     // pass 'cookie jar' to Redux Persist storage 'NodeCookiesWrapper()'
@@ -284,17 +294,18 @@ export default function (parameters) {
     //    }
 
     try {
-      preloadedState = await getStoredState(persistConfig);
+      preloadedState = await getStoredState(persistConfig); // redux-persist
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > preloadedState !! =======================: ', preloadedState);
     } catch (e) {
       console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > preloadedState {} =======================');
       preloadedState = {};
     }
 
+
     const store = createStore({
       history,
-      helpers: providers,
       data: preloadedState
+      helpers: providers,
     });
 
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponentDone !! > url: ', url);
@@ -373,7 +384,6 @@ export default function (parameters) {
       }
 
       // const locationState = store.getState().router.location;
-
       // if (req.originalUrl !== locationState.pathname + locationState.search) {
       //   return res.redirect(301, locationState.pathname);
       // }
@@ -404,24 +414,35 @@ export default function (parameters) {
 
   });
 
+
   // #########################################################################
+
 
   (async () => {
 
+    // handle thrown exceptions
     try {
-      // preload all your loadable components
+
+      // preload all loadable components on the server
       // make sure all loadable components are loaded when before rendering them 
       // Loadable.preloadAll(): returns >>> promise that will resolve <<< when all loadable components are ready
       await Loadable.preloadAll();
       const wc = await waitChunks(loadableChunksPath);
       // console.log('>>>>>>>>>>>>>>>>> SERVER > Loadable.preloadAll() > waitChunks(): ', wc);
+
     } catch (error) {
+
       console.log('>>>>>>>>>>>>>>>>> SERVER > Loadable.preloadAll() > ERROR: ', error);
+
     }
+
+    // -----------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------
 
     server.listen( app.get('port'), serverConfig.host, () => {
       console.log('>>>>>>>>>>>>>>>> server.js > Express server Connected: ', server.address());
     });
+
 
     server.on('error', (err, req, res) => {
 
@@ -472,15 +493,15 @@ export default function (parameters) {
     // https://nodejs.org/api/net.html#net_class_net_socket
     // https://nodejs.org/api/http.html#http_event_upgrade
     server.on('upgrade', (req, socket, head) => {
-      console.log('>>>>>>>>>>>>>>>> server.js > server.on(UPGRADE) <<<<<<<<<<<<<<<<');
+      console.log('>>>>>>>>>>>>>>>>> SERVER > $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ server.on(UPGRADE) $$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
       proxy.ws(req, socket, head);
     });
-
   })()
-
 };
 
+
 // #########################################################################
+
 
 mongoose.connection.on('connected', function() {
   console.log('####### > MONGOOSE CONNECTED: ' + dbURL);

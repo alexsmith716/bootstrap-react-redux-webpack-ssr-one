@@ -19,7 +19,7 @@ process.on('unhandledRejection', (error, promise) => {
 // *********************************************************************************************
 // Configure Express server and REST API
 // Turn this Feathers application into a Express compatible application
-// Additionally to Feathers functionality also lets you use the Express API
+// Feathers functionality lets you use the Express API
 // *********************************************************************************************
 
 // Create the app that is a Feathers AND Express application
@@ -40,7 +40,6 @@ app.use(cookieParser()); // parse cookie header and populate req.cookies
 // saveUninitialized: false,  // don't create session until something stored
                               // Forces 'uninitialized' session to be saved to the store
                               // A session is uninitialized when it is new but not modified
-
 
 // *** Note:
 // *** if you are using Session in conjunction with PassportJS, 
