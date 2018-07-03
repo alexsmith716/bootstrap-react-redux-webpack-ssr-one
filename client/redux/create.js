@@ -4,12 +4,14 @@ import { createPersistoid, persistCombineReducers, REGISTER } from 'redux-persis
 import clientMiddleware from './middleware/clientMiddleware';
 import createReducers from './reducer';
 
+
 function combine(reducers, persistConfig) {
   if (persistConfig) {
     return persistCombineReducers(persistConfig, reducers);
   }
   return combineReducers(reducers);
 }
+
 
 export function inject(store, reducers, persistConfig) {
   Object.entries(reducers).forEach(([name, reducer]) => {
@@ -20,6 +22,7 @@ export function inject(store, reducers, persistConfig) {
   store.replaceReducer(combine(createReducers(store.asyncReducers), persistConfig));
 }
 
+
 function getNoopReducers(reducers, data) {
   if (!data) return {};
   return Object.keys(data).reduce(
@@ -27,6 +30,8 @@ function getNoopReducers(reducers, data) {
     {}
   );
 }
+
+
 
 export default function createStore({ history, data, helpers, persistConfig }) {
 
