@@ -1,4 +1,3 @@
-
 const LOAD = 'redux-example/info/LOAD';
 const LOAD_SUCCESS = 'redux-example/info/LOAD_SUCCESS';
 const LOAD_FAIL = 'redux-example/info/LOAD_FAIL';

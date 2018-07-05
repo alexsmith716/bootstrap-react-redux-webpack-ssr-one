@@ -147,7 +147,6 @@ export default class App extends Component {
                   <a className="dropdown-item" href="/aboutthree">About Three</a>
                   <a className="dropdown-item" href="/aboutfour">About Four</a>
                   <a className="dropdown-item" href="/login">Login</a>
-                  <a className="dropdown-item" href="/about">About</a>
                   <a className="dropdown-item" href="/register">Register</a>
                 </div>
               </li>

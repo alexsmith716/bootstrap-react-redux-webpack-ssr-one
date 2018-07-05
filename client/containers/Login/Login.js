@@ -4,13 +4,15 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import LoginForm from '../../components/LoginForm/LoginForm';
+// import FacebookLogin from '../../components/FacebookLogin/FacebookLogin';
+
 import * as authActions from '../../redux/modules/auth';
 import * as notifActions from '../../redux/modules/notifs';
-import FacebookLogin from '../../components/FacebookLogin/FacebookLogin';
 
 // <p>You are currently logged in as {user.email}.</p>
 
 @connect(state => ({ user: state.auth.user }), { ...notifActions, ...authActions })
+
 @withRouter
 
 export default class Login extends Component {
@@ -27,23 +29,23 @@ export default class Login extends Component {
     user: null
   };
 
-  onFacebookLogin = async (err, data) => {
-    if (err) return;
+  // onFacebookLogin = async (err, data) => {
+  //   if (err) return;
 
-    try {
-      await this.props.login('facebook', data);
-      this.successLogin();
-    } catch (error) {
-      if (error.message === 'Incomplete oauth registration') {
-        this.props.history.push({
-          pathname: '/register',
-          state: { oauth: error.data }
-        });
-      } else {
-        throw error;
-      }
-    }
-  };
+  //   try {
+  //     await this.props.login('facebook', data);
+  //     this.successLogin();
+  //   } catch (error) {
+  //     if (error.message === 'Incomplete oauth registration') {
+  //       this.props.history.push({
+  //         pathname: '/register',
+  //         state: { oauth: error.data }
+  //       });
+  //     } else {
+  //       throw error;
+  //     }
+  //   }
+  // };
 
   onLocalLogin = async data => {
     const result = await this.props.login('local', data);
@@ -59,14 +61,14 @@ export default class Login extends Component {
     });
   };
 
-  FacebookLoginButton = ({ facebookLogin }) => (
-    <div>
-      <a href="#" className="m-b-10 d-flex justify-content-center align-items-center button-facebook" onClick={facebookLogin}>
-        <i className="fa fa-facebook-official"></i>
-        Facebook
-      </a>
-    </div>
-  );
+  // FacebookLoginButton = ({ facebookLogin }) => (
+  //   <div>
+  //     <a href="#" className="m-b-10 d-flex justify-content-center align-items-center button-facebook" onClick={facebookLogin}>
+  //       <i className="fa fa-facebook-official"></i>
+  //       Facebook
+  //     </a>
+  //   </div>
+  // );
 
 
   render() {
@@ -81,7 +83,7 @@ export default class Login extends Component {
 
         <div className={styles.loginContainer}>
 
-          <Helmet title="Login" />  
+          <Helmet title="Login" />
 
           {!user && (
 
@@ -105,13 +107,12 @@ export default class Login extends Component {
 
                   <div className="d-flex justify-content-between">
 
-                    <FacebookLogin
-                      appId="35353454535454354"
-                      /* autoLoad={true} */
-                      fields="name,email,picture"
-                      onLogin={this.onFacebookLogin}
-                      component={this.FacebookLoginButton}
-                    />
+                    <div>
+                      <a href="#" className="m-b-10 d-flex justify-content-center align-items-center button-facebook" onClick=''>
+                        <i className="fa fa-facebook-official"></i>
+                        Facebook
+                      </a>
+                    </div>
 
                     <div>
                       <a href="#" className="m-b-10 d-flex justify-content-center align-items-center button-google">
@@ -129,10 +130,9 @@ export default class Login extends Component {
                     Not a member?
                     <a href="/join?source=login">Create an account</a>.
                   </div>
-                </div> 
+                </div>
 
               </div>
-
             </div>
 
           )}
@@ -141,7 +141,7 @@ export default class Login extends Component {
 
             <div>
 
-              <div>You are currently logged in as Elmer Fudddd. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</div>
+              <p>You are currently logged in as Elmer Fudddd. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
 
               <div>
                 <button className="btn btn-danger" onClick={logout}>
@@ -153,9 +153,7 @@ export default class Login extends Component {
           )}
 
         </div>
-
       </div>
-
     );
   }
 };

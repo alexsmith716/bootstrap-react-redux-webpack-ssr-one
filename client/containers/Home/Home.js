@@ -22,7 +22,6 @@ export default class Home extends Component {
     const { online } = this.props;
     const styles = require('./scss/Home.scss');
 
-
     return (
 
       <div>
@@ -91,6 +90,12 @@ export default class Home extends Component {
               </div>
             </div>
 
+          </div>
+
+          <div className="row my-4">
+            <div className="col-lg-12 d-flex justify-content-center">
+              <p className="colorCrimsonGlobal openSansBoldwebfontFont">{`'online' store state is ${online} !!!!!!!!!!!!!!!!`}</p>
+            </div>
           </div>
 
         </div>

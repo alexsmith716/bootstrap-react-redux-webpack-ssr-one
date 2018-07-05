@@ -3,8 +3,8 @@ import Loadable from 'react-loadable';
 
 const RegisterLoadable = Loadable({
 
-  loader: () => import('./Register' /* webpackChunkName: 'register' */).then(module => module.default),
-  //loader: () => import('./Register').then(module => module.default),
+  // loader: () => import('./Register' /* webpackChunkName: 'register' */).then(module => module.default),
+  loader: () => import('./Register').then(module => module.default),
 
   loading: () => <div>Loading</div>
 
