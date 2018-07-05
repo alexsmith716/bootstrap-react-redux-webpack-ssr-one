@@ -142,6 +142,7 @@ export default class App extends Component {
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle lobsterv20latinregularFont" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                 <div className="dropdown-menu" aria-labelledby="dropdown01">
+                  <a className="dropdown-item" href="/about">The About</a>
                   <a className="dropdown-item" href="/aboutone">About One</a>
                   <a className="dropdown-item" href="/abouttoo">About Too</a>
                   <a className="dropdown-item" href="/aboutthree">About Three</a>

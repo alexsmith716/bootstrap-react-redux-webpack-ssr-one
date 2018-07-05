@@ -6,6 +6,7 @@ import { App, Home, NotFound } from '../client/containers';
 import Register from '../client/containers/Register/Loadable';
 import LoginSuccess from '../client/containers/LoginSuccess/Loadable';
 
+import About from '../client/containers/About/Loadable';
 import AboutOne from '../client/containers/AboutOne/Loadable';
 import AboutToo from '../client/containers/AboutToo/Loadable';
 import AboutThree from '../client/containers/AboutThree/Loadable';
@@ -31,6 +32,7 @@ const routes = [{
   component: App,
   routes: [
     { path: '/', exact: true, component: Home },
+    { path: '/about', component: About },
     { path: '/aboutone', component: AboutOne },
     { path: '/abouttoo', component: AboutToo },
     { path: '/aboutthree', component: AboutThree },
