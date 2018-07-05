@@ -3,11 +3,7 @@ import { Form, Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import loginValidation from './loginValidation';
 
-//const styles = require('./scss/LoginForm.scss');
-
-const Input = ({
-  input, label, type, meta: { touched, error, submitError }, ...rest
-}) => (
+const Input = ({input, label, type, meta: { touched, error, submitError }, ...rest}) => (
 
   <div className={`form-group ${(error || submitError) && touched ? 'has-error' : ''}`}>
 
@@ -63,7 +59,7 @@ const LoginForm = ({ onSubmit }) => (
 
     validate={loginValidation}
 
-    render={({ handleSubmit, submitError }) => (
+    render = { ({ handleSubmit, submitError }) => (
 
       <form onSubmit={handleSubmit}>
 
@@ -86,6 +82,7 @@ const LoginForm = ({ onSubmit }) => (
         </div>
 
       </form>
+
     )}
   />
 );

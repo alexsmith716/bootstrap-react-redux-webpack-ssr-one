@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import BasicForm from '../../components/BasicForm/BasicForm';
 // import { provideHooks } from 'redial';
 // import MiniInfoBar from 'components/MiniInfoBar/MiniInfoBar';
 // import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 
 export default class AboutFour extends Component {
 
-  state = {
-    showKitten: false
-  };
-
   render() {
 
-    const { showKitten } = this.state;
     const aboutImageMain = require('./images/about-750-450.png');
     const aboutImageOurCustomers = require('./images/about-500-300.png');
     const styles = require('./scss/AboutFour.scss');
@@ -23,14 +17,6 @@ export default class AboutFour extends Component {
       <div className="container">
 
         <h1 className={`mt-4 mb-3 ${styles.aboutFourUniqueColor}`}>About Four</h1>
-
-        <div className="row">
-          <div className="col-lg-12">
-
-            <BasicForm onSubmit='' />
-
-          </div>
-        </div>
 
         <div className="row">
           <div className="col-lg-6">

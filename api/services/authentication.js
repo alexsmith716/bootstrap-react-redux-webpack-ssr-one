@@ -1,8 +1,8 @@
 import auth from '@feathersjs/authentication';
 import jwt from '@feathersjs/authentication-jwt';
 import local from '@feathersjs/authentication-local';
-import oauth1 from '@feathersjs/authentication-oauth1';
-import oauth2 from '@feathersjs/authentication-oauth2';
+// import oauth1 from '@feathersjs/authentication-oauth1';
+// import oauth2 from '@feathersjs/authentication-oauth2';
 // import FacebookTokenStrategy from 'passport-facebook-token';
 
 // auth: adds shared PassportJS authentication for REST and WebSocket transports using JWT

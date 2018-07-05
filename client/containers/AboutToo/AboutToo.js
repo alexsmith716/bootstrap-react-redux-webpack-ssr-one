@@ -6,15 +6,8 @@ import Helmet from 'react-helmet';
 
 export default class AboutToo extends Component {
 
-  state = {
-    showKitten: false
-  };
-
-  // handleToggleKitten = () => this.setState({ showKitten: !this.state.showKitten });
-
   render() {
 
-    const { showKitten } = this.state;
     const aboutImageMain = require('./images/about-750-450.png');
     const aboutImageOurCustomers = require('./images/about-500-300.png');
 

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as authActions from 'redux/modules/auth';
+
+import * as authActions from '../../redux/modules/auth';
 
 @connect(state => ({ user: state.auth.user }), authActions)
 
@@ -9,9 +10,7 @@ export default class LoginSuccess extends Component {
 
   static propTypes = {
 
-    user: PropTypes.shape({
-      email: PropTypes.string
-    }).isRequired,
+    user: PropTypes.shape({ email: PropTypes.string }).isRequired,
 
     logout: PropTypes.func.isRequired
 
