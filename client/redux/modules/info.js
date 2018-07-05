@@ -9,12 +9,15 @@ const initialState = {
 };
 
 export default function info(state = initialState, action = {}) {
+
   switch (action.type) {
+
     case LOAD:
       return {
         ...state,
         loading: true
       };
+
     case LOAD_SUCCESS:
       return {
         ...state,
@@ -22,6 +25,7 @@ export default function info(state = initialState, action = {}) {
         loaded: true,
         data: action.result
       };
+
     case LOAD_FAIL:
       return {
         ...state,
@@ -29,6 +33,7 @@ export default function info(state = initialState, action = {}) {
         loaded: false,
         error: action.error
       };
+
     default:
       return state;
   }

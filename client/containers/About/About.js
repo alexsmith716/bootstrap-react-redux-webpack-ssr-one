@@ -1,29 +1,46 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-// import { provideHooks } from 'redial';
-// import MiniInfoBar from 'components/MiniInfoBar/MiniInfoBar';
-// import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
+import { provideHooks } from 'redial';
+import { isLoaded as isInfoLoaded, load as loadInfo } from '../../redux/modules/info';
 
-export default class AboutOne extends Component {
+// ensure that data for route(s) '/load-info' is prefetched (@provideHooks) on server before attempting to render
+// for 'info', test 'globalState >> loaded' 
+// if 'globalState >> loaded' is false, dispatch API request to '/load-info' @ (API > services > custom > index)
+// a promise is passed which resolves to the JSON message response of API request '/load-info' ('This came from the api server')
+// catch error on loadInfo() dispatch will return 'null'
+// data dependencies for 'loaded' defined in 'redux/modules/info'
+// define hook for 'redux/modules/info' actions / events
+// 
+@provideHooks({
+  fetch: ({ store: { dispatch, getState } }) =>
+    !isInfoLoaded(getState()) ? dispatch(loadInfo()).catch(() => null) : Promise.resolve()
+})
+
+export default class About extends Component {
+
+  state = {
+    aboutContainerStateOne: false
+  };
 
   render() {
 
+    const { aboutContainerStateOne } = this.state;
     const aboutImageMain = require('../../assets/images/about-750-450.png');
     const aboutImageOurCustomers = require('../../assets/images/about-500-300.png');
-    const styles = require('./scss/AboutOne.scss');
+    const styles = require('./scss/About.scss');
 
     return (
 
       <div className="container">
 
-        <h1 className={`mt-4 mb-3 ${styles.aboutOneUniqueColor}`}>About One</h1>
+        <h1 className={`mt-4 mb-3 ${styles.aboutUniqueColor}`}>About</h1>
 
         <div className="row">
           <div className="col-lg-6">
             <img className="img-fluid rounded mb-4" src={aboutImageMain} alt="" />
           </div>
           <div className="col-lg-6">
-            <h2>AboutOne TooModern Business</h2>
+            <h2>About Modern Business</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed voluptate nihil eum consectetur similique? Consectetur, quod, incidunt, harum nisi dolores delectus reprehenderit voluptatem perferendis dicta dolorem non blanditiis ex fugiat.</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe, magni, aperiam vitae illum voluptatum aut sequi impedit non velit ab ea pariatur sint quidem corporis eveniet. Odit, temporibus reprehenderit dolorum!</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, consequuntur, modi mollitia corporis ipsa voluptate corrupti eum ratione ex ea praesentium quibusdam? Aut, in eum facere corrupti necessitatibus perspiciatis quis?</p>
@@ -93,6 +110,13 @@ export default class AboutOne extends Component {
           </div>
           <div className="col-lg-2 col-sm-4 mb-4">
             <img className="img-fluid" src={aboutImageOurCustomers} alt="" />
+          </div>
+        </div>
+
+        <h2>This Component's State!!!</h2>
+        <div className="row">
+          <div className="col-lg-12 d-flex justify-content-center">
+            <p className="colorCrimsonGlobal openSansBoldwebfontFont">{`'aboutContainerStateOne' store state is ${aboutContainerStateOne} !!!!!!!!!!!!!!!!`}</p>
           </div>
         </div>
 

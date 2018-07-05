@@ -8,8 +8,8 @@ export default class AboutFour extends Component {
 
   render() {
 
-    const aboutImageMain = require('./images/about-750-450.png');
-    const aboutImageOurCustomers = require('./images/about-500-300.png');
+    const aboutImageMain = require('../../assets/images/about-750-450.png');
+    const aboutImageOurCustomers = require('../../assets/images/about-500-300.png');
     const styles = require('./scss/AboutFour.scss');
 
     return (
