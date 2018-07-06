@@ -1,5 +1,5 @@
 import { FORM_ERROR } from 'final-form';
-import jsCookie from 'js-cookie';
+import cookie from 'js-cookie';
 
 const LOAD = 'redux-example/auth/LOAD';
 const LOAD_SUCCESS = 'redux-example/auth/LOAD_SUCCESS';
@@ -15,7 +15,8 @@ const LOGOUT_SUCCESS = 'redux-example/auth/LOGOUT_SUCCESS';
 const LOGOUT_FAIL = 'redux-example/auth/LOGOUT_FAIL';
 
 const initialState = {
-  loaded: false
+  loaded: false,
+  user: null
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -143,22 +144,43 @@ export function isLoaded(globalState) {
   return iAL;
 }
 
+
+// export function load() {
+//   const lA = async ({ app, client }) => {
+//     const response = await app.authenticate();
+//     await setCookie({ app })(response);
+//     setToken({
+//       client,
+//       app
+//     })(response);
+//     setUser({ app })(response);
+//     console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth > app.authenticate(): ', response);
+//     return response;
+//   }
+//   console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth: ', lA);
+//   return {
+//     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+//     promise: lA
+//   };
+// }
+
+// export function isLoaded(globalState) {
+//   return globalState.auth && globalState.auth.loaded;
+// }
+// 
 export function load() {
-  const lA = async ({ app, client }) => {
-    const response = await app.authenticate();
-    console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth > app.authenticate(): ', response);
-    await setCookie({ app })(response);
-    setToken({
-      client,
-      app
-    })(response);
-    setUser({ app })(response);
-    return response;
-  }
-  console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth: ', lA);
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: lA
+    promise: async ({ app, client }) => {
+      const response = await app.authenticate();
+      await setCookie({ app })(response);
+      setToken({
+        client,
+        app
+      })(response);
+      setUser({ app })(response);
+      return response;
+    }
   };
 }
 

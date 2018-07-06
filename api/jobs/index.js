@@ -1,1 +1,0 @@
-export cardJob from './cardJob';

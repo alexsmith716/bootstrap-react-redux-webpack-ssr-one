@@ -1,0 +1,6 @@
+
+.registerContainer {
+  @include bootstrap-default-font;
+  padding-top: calculate-rem(65px);
+  // padding-bottom: calculate-rem(40px);
+}
