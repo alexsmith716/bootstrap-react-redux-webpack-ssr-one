@@ -4,7 +4,7 @@ import { connectedReduxRedirect } from 'redux-auth-wrapper/history4/redirect';
 import { App, Home, NotFound } from '../client/containers';
 
 import Register from '../client/containers/Register/Loadable';
-import LoginSuccess from '../client/containers/LoginSuccess/Loadable';
+// import LoginSuccess from '../client/containers/LoginSuccess/Loadable';
 
 import About from '../client/containers/About/Loadable';
 import AboutOne from '../client/containers/AboutOne/Loadable';
@@ -12,6 +12,8 @@ import AboutToo from '../client/containers/AboutToo/Loadable';
 import AboutThree from '../client/containers/AboutThree/Loadable';
 import AboutFour from '../client/containers/AboutFour/Loadable';
 import Login from '../client/containers/Login/Loadable';
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 const isAuthenticated = connectedReduxRedirect({
   redirectPath: '/login',
@@ -28,6 +30,8 @@ const isNotAuthenticated = connectedReduxRedirect({
   allowRedirectBack: false
 });
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 const routes = [{
   component: App,
   routes: [
@@ -38,7 +42,7 @@ const routes = [{
     { path: '/aboutthree', component: AboutThree },
     { path: '/aboutfour', component: AboutFour },
     { path: '/login', component: Login },
-    { path: '/login-success', component: isAuthenticated(LoginSuccess) },
+    // { path: '/login-success', component: isAuthenticated(LoginSuccess) },
     { path: '/register', component: isNotAuthenticated(Register) },
     { component: NotFound },
   ],
