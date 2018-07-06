@@ -6,8 +6,6 @@ import compression from 'compression';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import jwt from 'express-jwt';
-import cors from 'cors';
 import morgan from 'morgan';
 import path from 'path';
 import http from 'http';
@@ -58,13 +56,14 @@ console.log('>>>>>>>>>>>>>>>>> SERVER > loadableChunksPath +++++++++: ', loadabl
 
 // #########################################################################
 
-const MongoStore = require('connect-mongo')(session);
-const sessionExpireDate = 6 * 60 * 60 * 1000; // 6 hours
 let gracefulShutdown;
-let dbURL = serverConfig.mongoURL;
+
+let dbURL = serverConfig.mongoDBmongooseURL;
+
 if (process.env.NODE_ENV === 'production') {
   // dbURL = serverConfig.mongoLabURL;
 };
+
 const mongooseOptions = {
   autoReconnect: true,
   keepAlive: true,
@@ -120,7 +119,6 @@ export default function (parameters) {
   app.use(morgan('dev'));
   app.use(helmet());
   app.use(helmet.xssFilter());
-  app.use(cors());
   // app.use(headers);
 
   // #########################################################################

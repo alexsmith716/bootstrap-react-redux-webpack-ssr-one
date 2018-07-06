@@ -70,3 +70,11 @@ import createBrowserHistory from 'history/createBrowserHistory';
   </ConnectedRouter>
 </Provider>
 
+
+show dbs
+use pec2016s
+show collections
+db.users.find().pretty()
+use pec2016s
+db.dropDatabase()
+

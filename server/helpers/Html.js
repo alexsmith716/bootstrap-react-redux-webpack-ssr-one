@@ -11,7 +11,7 @@ const Html = ({
 }) => {
   const head = Helmet.renderStatic();
 
-  console.log('>>>>>> HTML.JS > assets: ', assets);
+  // console.log('>>>>>> HTML.JS > assets: ', assets);
   // console.log('>>>>>> HTML.JS > store: ', store);
   // console.log('>>>>>> HTML.JS > content: ', content);
   // console.log('>>>>>> HTML.JS > bundles: ', bundles);
