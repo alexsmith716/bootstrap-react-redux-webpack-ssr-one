@@ -7,6 +7,7 @@ import axios from 'axios';
 import config from '../config/config';
 
 const storage = __SERVER__ ? null : require('localforage');
+
 const host = clientUrl => (__SERVER__ ? `http://${config.apiHost}:${config.apiPort}` : clientUrl);
 
 // ===================================================================================
