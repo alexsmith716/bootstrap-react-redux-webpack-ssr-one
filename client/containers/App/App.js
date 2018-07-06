@@ -9,6 +9,8 @@ import { provideHooks } from 'redial';
 import Helmet from 'react-helmet';
 import qs from 'qs';
 
+import { Link } from 'react-router-dom';
+
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from '../../redux/modules/auth';
 import { isLoaded as isInfoLoaded, load as loadInfo } from '../../redux/modules/info';
 
@@ -131,14 +133,14 @@ export default class App extends Component {
         <Helmet {...config.app.head} />
 
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="main-nav">
-          <a className={`navbar-brand ${stylesScss1.brand}`} href="/">Election App</a>
+          <Link to='/' className={`navbar-brand ${stylesScss1.brand}`}>Election App</Link>
           <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarCollapse">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item active">
-                <a className="nav-link openSansItalicwebfontFont" href="/">Home <span className="sr-only">(current)</span></a>
+                <Link to='/' className="nav-link openSansItalicwebfontFont">Home <span className="sr-only">(current)</span></Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link bootstrapDefaultFont" data-toggle="modal" data-target="#exampleModal">
@@ -151,13 +153,13 @@ export default class App extends Component {
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle lobsterv20latinregularFont" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                 <div className="dropdown-menu" aria-labelledby="dropdown01">
-                  <a className="dropdown-item" href="/about">The About</a>
-                  <a className="dropdown-item" href="/aboutone">About One</a>
-                  <a className="dropdown-item" href="/abouttoo">About Too</a>
-                  <a className="dropdown-item" href="/aboutthree">About Three</a>
-                  <a className="dropdown-item" href="/aboutfour">About Four</a>
-                  <a className="dropdown-item" href="/login">Login</a>
-                  <a className="dropdown-item" href="/register">Register</a>
+                  <Link to='/about' className="dropdown-item">The About</Link>
+                  <Link to='/aboutone' className="dropdown-item">About One</Link>
+                  <Link to='/abouttoo' className="dropdown-item">About Too</Link>
+                  <Link to='/aboutthree' className="dropdown-item">About Three</Link>
+                  <Link to='/aboutfour' className="dropdown-item">About Four</Link>
+                  <Link to='/login' className="dropdown-item">Login</Link>
+                  <Link to='/register' className="dropdown-item">Register</Link>
                 </div>
               </li>
             </ul>
