@@ -3,8 +3,6 @@ const path = require('path');
 
 const rootPath = path.resolve(__dirname, '..');
 
-console.log('>>>>>>>>>>>>>>> WEBPACK > WEBPACK.CONFIG.JS >  &&&&&&&&& >>>>>>>>>>>>>>>>>>>>: ');
-
 module.exports = {
 
   context: rootPath,

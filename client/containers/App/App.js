@@ -29,13 +29,6 @@ import config from '../../../config/config';
     const iIL = isInfoLoaded(getState());
     console.log('>>>>>>>>>>>>> APP.JS > @provideHooks > isInfoLoaded ??: ', iIL);
 
-    // if (!isAuthLoaded(getState())) {
-    //   await dispatch(loadAuth()).catch(() => null);
-    // }
-    // if (!isInfoLoaded(getState())) {
-    //   await dispatch(loadInfo()).catch(() => null);
-    // }
-
     if (!iSL) {
       console.log('>>>>>>>>>>>>> APP.JS > @provideHooks > isAuthLoaded 1111111111111: ', iSL);
       await dispatch(loadAuth()).catch(() => null);

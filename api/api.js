@@ -25,10 +25,15 @@ process.on('unhandledRejection', (error, promise) => {
 // Create the app that is a Feathers AND Express application
 const app = express(feathers());
 
+const MongoStore = require('connect-mongo')(session);
+
 // assign setting name 'config' to value config object 'auth' (cookie info)
 app.set('config', config);
 app.use(morgan('dev'));
 app.use(cookieParser()); // parse cookie header and populate req.cookies
+
+
+// *********************************************************************************************
 
 
 // EXPRESS-SESSION:
@@ -42,17 +47,57 @@ app.use(cookieParser()); // parse cookie header and populate req.cookies
                               // A session is uninitialized when it is new but not modified
 
 // *** Note:
-// *** if you are using Session in conjunction with PassportJS, 
-// *** Passport will add an empty Passport object to the session for use after a user is authenticated, 
-// *** which will be treated as a modification to the session, causing it to be saved. 
+// *** if you are using Session in conjunction with PassportJS,
+// *** Passport will add an empty Passport object to the session for use after a user is authenticated,
+// *** which will be treated as a modification to the session, causing it to be saved
 
-// creating session 
-app.use(session({
-  secret: serverConfig.sessionSecret, // secret used to sign the session ID cookie
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 60000 }
-}));
+// **Note** Session data is _not_ saved in the cookie itself, just the session ID
+// Session data is stored server-side.
+// module directly reads and writes cookies on `req`/`res`
+// **Warning** The default server-side session storage, `MemoryStore`, is not designed for a production
+
+// Session expiration:
+
+//    *** When the session cookie has an expiration date, connect-mongo will use it.
+//    *** Otherwise, it will create a new one, using ttl option.
+//    *** Note: Each time an user interacts with the server, its session expiration date is refreshed.
+
+// Remove expired sessions:
+
+//    *** By default, connect-mongo uses MongoDB's TTL collection feature (2.2+) to have mongod automatically remove expired sessions. 
+//    *** But you can change this behavior.
+
+// Set MongoDB to clean expired sessions (default mode):
+
+//    *** connect-mongo will create a TTL index for you at startup
+
+// Connection to MongoDB:
+//    *** Re-use a Mongoose Connection:                             >>> new MongoStore({ mongooseConnection: mongoose.connection })
+//    *** Re-use a native MongoDB driver connection (or a promise): >>> new MongoStore({ db: dbInstance })
+//    *** Create a new connection from a MongoDB connection string: >>> new MongoStore({ url: 'mongodb://localhost/test-app' })
+
+const sessionExpireDate = 6 * 60 * 60 * 1000; // 6 hours
+
+app.use(
+  session({
+    secret: serverConfig.sessionSecret,
+    resave: false,
+    // rolling: true,
+    saveUninitialized: false,
+    cookie: {
+      secure: false,
+      // httpOnly: true,
+      // maxAge: serverConfig.sessionExpiration,
+      maxAge: sessionExpireDate,
+    },
+    name: 'id',
+    store: new MongoStore({
+      url: serverConfig.mongoDBsessionURL,
+      // ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+      autoRemove: 'native',
+    })
+  })
+);
 
 
 // *********************************************************************************************

@@ -144,30 +144,6 @@ export function isLoaded(globalState) {
   return iAL;
 }
 
-
-// export function load() {
-//   const lA = async ({ app, client }) => {
-//     const response = await app.authenticate();
-//     await setCookie({ app })(response);
-//     setToken({
-//       client,
-//       app
-//     })(response);
-//     setUser({ app })(response);
-//     console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth > app.authenticate(): ', response);
-//     return response;
-//   }
-//   console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth: ', lA);
-//   return {
-//     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-//     promise: lA
-//   };
-// }
-
-// export function isLoaded(globalState) {
-//   return globalState.auth && globalState.auth.loaded;
-// }
-// 
 export function load() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
@@ -179,6 +155,7 @@ export function load() {
         app
       })(response);
       setUser({ app })(response);
+      console.log('>>>>>>>>>>>>> Redux > Modules > AUTH.JS > loadAuth: ', response);
       return response;
     }
   };
