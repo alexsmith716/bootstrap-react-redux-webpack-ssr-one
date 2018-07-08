@@ -27,7 +27,7 @@ const Html = ({
         {head.meta.toComponent()}
         {head.link.toComponent()}
         {head.script.toComponent()}
-
+        <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -48,7 +48,7 @@ const Html = ({
               media="screen, projection"
               rel="stylesheet"
               type="text/css"
-              charSet="UTF-8"
+              charSet="utf-8"
             />
           ))}
 
@@ -63,17 +63,17 @@ const Html = ({
         {store && (
           <script
             dangerouslySetInnerHTML={{ __html: `window.__data=${serialize(store.getState())};` }}
-            charSet="UTF-8"
+            charSet="utf-8"
           ></script>
         )}
 
-        {assets.javascript && <script src={assets.javascript.manifest} charSet="UTF-8" />}
+        {assets.javascript && <script src={assets.javascript.manifest} charSet="utf-8" />}
 
-        {assets.javascript && <script src={assets.javascript.vendor} charSet="UTF-8" />}
+        {assets.javascript && <script src={assets.javascript.vendor} charSet="utf-8" />}
 
-        { __DLLS__ && <script key="dlls__vendor" src="/assets/dlls/dll__vendor.js" charSet="UTF-8" /> }
+        { __DLLS__ && <script key="dlls__vendor" src="/assets/dlls/dll__vendor.js" charSet="utf-8" /> }
 
-        {assets.javascript && <script src={assets.javascript.main} charSet="UTF-8" />}
+        {assets.javascript && <script src={assets.javascript.main} charSet="utf-8" />}
 
         {bundles.map(bundle => testCss.test(bundle) && bundle && <script src={config.assetsPath + bundle.file} key={bundle.id} />)}
 
