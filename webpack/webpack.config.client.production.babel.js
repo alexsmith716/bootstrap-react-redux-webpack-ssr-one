@@ -112,7 +112,45 @@ configuration.module.rules.push(
   },
 );
 
+// optimization.minimize: ( false || true )
+//    *** Tell webpack to minimize the bundle using the UglifyjsWebpackPlugin
+//    *** This is true by default in production mode
+//    *** if 'false', then minimize manually in a separate step
+
+// While webpack 5 is likely to come with a CSS minimizer built-in,
+// with webpack 4 you need to bring your own.
+// To minify the output, use a plugin like optimize-css-assets-webpack-plugin.
+// Setting optimization.minimizer overrides the defaults provided by webpack,
+// so make sure to also specify a JS minimizer:
+
 configuration.optimization = {
+  minimizer: [
+    new UglifyJsPlugin({
+      // cache: false,      // Enable file caching (default: false)
+      // parallel: false,   // Use multi-process parallel running to improve the build speed (default: false)
+      // sourceMap: false, // Use source maps to map error message locations to modules (default: false)
+      // extractComments: false, // Whether comments shall be extracted to a separate file (default: false)
+      // uglifyOptions: {
+      //   ecma: 8, // Supported ECMAScript Version (default undefined)
+      //   warnings: false, // Display Warnings (default false)
+      //   mangle: true, // Enable Name Mangling (default true)
+      //   compress: {
+      //     passes: 1,  // The maximum number of times to run compress (default: 1)
+      //   },
+      //   output: {
+      //     beautify: true, // whether to actually beautify the output (default true)
+      //     comments: false, // true or "all" to preserve all comments, "some" to preserve some (default false)
+      //   },
+      //   ie8: false, // Enable IE8 Support (default false)
+      //   safari10: false, // Enable work around Safari 10/11 bugs in loop scoping and await (default false)
+      // }
+    }),
+    new OptimizeCSSAssetsPlugin({
+      // cssProcessor: require('cssnano'), // cssnano >>> default optimize \ minimize css processor 
+      // cssProcessorOptions: { discardComments: { removeAll: true } }, // defaults to {}
+      // canPrint: true, // indicating if the plugin can print messages to the console (default true)
+    }),
+  ],
   splitChunks: {
     chunks: 'async',
     minSize: 30000,
@@ -192,34 +230,6 @@ configuration.plugins.push(
   new ReactLoadablePlugin({
     filename: path.join(configuration.output.path, 'loadable-chunks.json')
   }),
-
-  new UglifyJsPlugin(),
-  // new UglifyJsPlugin({
-  //   cache: false,      // Enable file caching (default: false)
-  //   parallel: false,   // Use multi-process parallel running to improve the build speed (default: false)
-  //   sourceMap: false, // Use source maps to map error message locations to modules (default: false)
-  //   extractComments: false, // Whether comments shall be extracted to a separate file (default: false)
-  //   uglifyOptions: {
-  //     ecma: 8, // Supported ECMAScript Version (default undefined)
-  //     warnings: false, // Display Warnings (default false)
-  //     mangle: true, // Enable Name Mangling (default true)
-  //     compress: {
-  //       passes: 1,  // The maximum number of times to run compress (default: 1)
-  //     },
-  //     output: {
-  //       beautify: true, // whether to actually beautify the output (default true)
-  //       comments: false, // true or "all" to preserve all comments, "some" to preserve some (default false)
-  //     },
-  //     ie8: false, // Enable IE8 Support (default false)
-  //     safari10: false, // Enable work around Safari 10/11 bugs in loop scoping and await (default false)
-  //   }
-  // }),
-
-  // new OptimizeCSSAssetsPlugin({
-  //   cssProcessor: require('cssnano'), // cssnano >>> default optimize \ minimize css processor 
-  //   cssProcessorOptions: { discardComments: { removeAll: true } }, // defaults to {}
-  //   canPrint: true, // indicating if the plugin can print messages to the console (default true)
-  // }),
 
   new HtmlWebpackPlugin({
     filename: 'index.html',

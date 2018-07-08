@@ -4,7 +4,7 @@ var projectRootPath = path.resolve(__dirname, '../');
 
 module.exports = {
   mode: 'development',
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
 
   output: {
     path: path.join(projectRootPath, 'build/public/assets/dlls'),

@@ -31,7 +31,6 @@ import { ReduxAsyncConnect, Provider } from '../shared';
 import createMemoryHistory from 'history/createMemoryHistory';
 
 import createStore from '../client/redux/create';
-// import createStore from 'redux/create';
 
 import { ConnectedRouter } from 'react-router-redux';
 import { renderRoutes } from 'react-router-config';
@@ -252,7 +251,7 @@ export default function (parameters) {
 
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.app !!: ', providers.app);
     // console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > providers.client !!: ', providers.client);
-    
+
 
     console.log('>>>>>>>>>>>>>>>> SERVER > APP.USE > ASYNC !! > SetUpComponent !! START !! $$$$$$$$$$$$$$$$$$$$$$');
 
